@@ -1,0 +1,190 @@
+/*
+=== ESTILOS GLOBALES ===    
+*/
+:root {
+  --color--primario: #ff6347;
+  --color-fondo: #f0f0f0;
+  --color-texto: #333;
+  --color-blanco: #fff;
+  --color-borde: #ddd;
+  --color-focus: #ff4500;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background-color: var(--color-fondo);
+  font-family: Arial, sans-serif;
+}
+
+/*
+=== ESTILOS PARA EL  INDEX ===
+*/
+
+.body--index {
+  position: relative;
+  height: 100vh;
+}
+.contenedor--index {
+  height: 300px;
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--color-borde);
+  border-radius: 7px;
+  background-color: var(--color-blanco);
+}
+
+.logo--index {
+  width: 350px;
+  margin-bottom: 10px;
+  display: block;
+  filter: drop-shadow(0 0 5px var(--color--primario));
+  object-fit: contain;
+}
+
+.contenedor--index button {
+  display: block;
+  margin: 0 auto;
+  padding: 0;
+  background-color: var(--color--primario);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 1.1rem;
+  height: 60px;
+  width: 50%;
+  transition: all 0.3s ease;
+}
+.contenedor--index button a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px 20px;
+  color: var(--color-blanco);
+  text-decoration: none;
+  padding: 5px 5px;
+}
+.contenedor--index button:hover {
+  background-color: var(--color-focus);
+  transform: scale(1.05);
+}
+
+/*
+=== ESTILOS PARA EL  REGISTRO Y LOGIN ===
+*/
+.body--registro--login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login--registro {
+  width: 450px;
+  height: auto;
+  padding: 40px;
+  background-color: var(--color-blanco);
+  border: 1px solid var(--color-borde);
+  border-radius: 7px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.login--registro h1 {
+  text-align: center;
+  color: var(--color--primario);
+  margin-bottom: 25px;
+}
+
+.login--registro-form {
+  display: block;
+  width: 100%;
+}
+
+/* === CONTENEDORES === */
+.login--registro-form div {
+  display: block;
+  margin: 15px 0;
+}
+
+/* === LABELS === */
+.login--registro-form div label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--color-texto);
+  font-weight: 500;
+}
+
+/* === INPUTS Y SELECT === */
+.login--registro-form div input,
+.login--registro-form div select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--color-borde);
+  border-radius: 5px;
+  outline: none;
+  font-size: 0.95rem;
+  background-color: var(--color-blanco);
+}
+
+.login--registro-form div input:focus,
+.login--registro-form div select:focus {
+  border-color: var(--color-focus);
+}
+
+/* === BOTÓN === */
+.login--registro-form button {
+  display: block;
+  width: 100%;
+  margin: 25px 0 10px;
+  padding: 12px;
+  background-color: var(--color--primario);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.login--registro-form button:hover {
+  background-color: var(--color-focus);
+  transform: scale(1.02);
+}
+
+.login--registro a {
+  display: block;
+  text-align: center;
+  color: var(--color--primario);
+  text-decoration: none;
+}
+
+.login--registro a:hover {
+  text-decoration: underline;
+}
+
+/*
+=== ESTILOS PARA EL  ADMIN  Y CLIENTE ===
+*/
+.h1--admin--cliente {
+  color: var(--color--primario);
+}
+
+.boton--admin-cliente {
+  padding: 10px 20px;
+  background-color: var(--color--primario);
+  color: var(--color-blanco);
+  border: 1px solid var(--color-borde);
+  border-radius: 7px;
+  cursor: pointer;
+}
+.boton--admin-cliente:hover {
+  background-color: var(--color-focus);
+  transform: scale(1.05);
+}
