@@ -78,7 +78,7 @@ document.querySelector<HTMLInputElement>(#buscador)?.addEventListener("input",e 
     cargarProductos(filtrado);
 })
 
-// Carrito (terminar), despues de ingles
+// Carrito (terminar), despues de ingles y luego seguir
 const agregarAlCarrito = (producto: IProducto)=>{
 const carrito = JSON.parse(localStorage.getItem("carrito")||"[]");
 const existe = carrito.find((item:IProducto)=> item.id === producto.id);
