@@ -7,5 +7,5 @@ export interface IUser {
   mail: string;
   celular: string;
   rol: Rol;
-  password: string;
+  password?: string;
 }

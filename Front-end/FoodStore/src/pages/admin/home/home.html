@@ -1,18 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../../../style.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>FoodStore - Admin</title>
 </head>
-
 <body>
-    <h1 class="h1--admin--cliente">Hola desde la vista de admin</h1>
-    <button id="logoutButton" class="boton--admin-cliente">Logout</button>
+    <header class="header">
+        <div class="header-izquierda">
+            <a href="/src/pages/admin/home/home.html" class="logo-link">
+                <img src="/images/FoodStore.png" alt="logo">
+            </a>
+        </div>
+        <nav class="header-nav">
+            <a href="/src/pages/admin/home/home.html">Inicio</a>
+            <a href="/src/pages/admin/categories/categories.html">Categorias</a>
+            <a href="/src/pages/admin/products/products.html">Productos</a>
+            <a href="/src/pages/admin/orders/orders.html">Pedidos</a>
+        </nav>
+        <div class="header-derecha">
+            <span id="nombreUsuario" class="nombre-usuario">Usuario</span>
+            <button id="logoutButton" class="btn-logout">Cerrar Sesion</button>
+        </div>
+    </header>
+
+    <main class="main">
+        <h1>Bienvenido al Panel Admin</h1>
+    </main>
+
     <script type="module" src="./home.ts"></script>
 </body>
-
-
 </html>

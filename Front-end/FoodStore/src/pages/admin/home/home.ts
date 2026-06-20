@@ -1,19 +1,15 @@
-import { checkAuhtUser, logout } from "../../../utils/auth";
+import type { IUser } from "../../../types/IUser";
+import { cerrarSesion } from "../../../utils/auth";
 
-const buttonLogout = document.getElementById(
-  "logoutButton"
-) as HTMLButtonElement;
-buttonLogout?.addEventListener("click", () => {
-  logout();
-});
-
-
-const initPage = () => {
-  console.log("inicio de pagina");
-  checkAuhtUser(
-    "/src/pages/auth/login/login.html",
-    "/src/pages/client/home/home.html",
-    "ADMIN"
-  );
+const actualizarHeader = () => {
+  const userData = localStorage.getItem("userData");
+  if (userData) {
+    const usuario: IUser = JSON.parse(userData);
+    const nombreEl = document.getElementById("nombreUsuario");
+    if (nombreEl) nombreEl.textContent = `${usuario.nombre} ${usuario.apellido}`;
+  }
 };
-initPage();
+
+document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
+
+actualizarHeader();

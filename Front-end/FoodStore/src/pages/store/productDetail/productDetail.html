@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodStore - Detalle del Producto</title>
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-izquierda">
+            <a href="/src/pages/store/home/home.html" class="logo-link">
+                <img src="/images/FoodStore.png" alt="logo de FoodStore">
+            </a>
+        </div>
+        <nav class="header-nav">
+            <a href="/src/pages/store/home/home.html">Inicio</a>
+            <a href="/src/pages/client/orders/orders.html">Mis Pedidos</a>
+            <a href="/src/pages/admin/home/home.html" id="adminLink" style="display: none;">Administracion</a>
+        </nav>
+        <div class="header-derecha">
+            <a href="/src/pages/store/cart/cart.html" class="carrito-link">
+                🛒 <span id="carritoContador">0</span>
+            </a>
+            <span id="nombreUsuario" class="nombre-usuario">Usuario</span>
+            <a href="/src/pages/store/home/home.html" class="btn-catalogo">Catalogo</a>
+            <button id="logoutButton" class="btn-logout">Cerrar Sesion</button>
+        </div>
+    </header>
+
+    <main class="main">
+        <a href="/src/pages/store/home/home.html" class="btn-volver">← Volver</a>
+        <div id="contenedor-detail" class="contenedor-detail"></div>
+    </main>
+
+    <footer>
+        <div class="footer-contenido">
+            <p>&copy; 2026 Food Store. Todos los derechos reservados.</p>
+            <nav class="footer-links">
+                <a href="#">Términos y Condiciones</a>
+                <a href="#">Privacidad</a>
+                <a href="#">Contacto</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script type="module" src="./productDetail.ts"></script>
+</body>
+</html>

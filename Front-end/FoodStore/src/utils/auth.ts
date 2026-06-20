@@ -26,7 +26,7 @@ export const checkAuhtUser = (
   }
 };
 
-export const logout = () => {
+export const cerrarSesion = () => {
   removeUser();
   navigate("/src/pages/auth/login/login.html");
 };

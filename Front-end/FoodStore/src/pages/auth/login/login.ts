@@ -5,51 +5,58 @@ import { navigate } from "../../../utils/navigate";
 const formulario = document.getElementById("login") as HTMLFormElement;
 const inputEmail = document.getElementById("email") as HTMLInputElement;
 const inputContraseña = document.getElementById("password") as HTMLInputElement;
-const selectRol = document.getElementById("rol") as HTMLSelectElement;
 
 formulario?.addEventListener("submit", (e: SubmitEvent) => {
   e.preventDefault();
   e.stopPropagation();
-  
-  const email = inputEmail.value;
-  const password = inputContraseña.value;
-  const rol = selectRol.value as Rol;
 
-  // 1. Obtener usuarios del localStorage
+  const email = inputEmail.value.trim();
+  const password = inputContraseña.value.trim();
+
+  /// Validar que no este vacio
+  if (!email || !password) {
+    alert("Por favor completa todos los campos");
+    return;
+  }
+
+  // Obtenemos usuario del LocalStore
   const usersString = localStorage.getItem("Users");
 
   if (!usersString) {
-    alert("No hay usuarios registrados. Por favor, regístrate primero.");
+    alert("No hay usuarios registrados.");
     return;
   }
 
-  const Users: IUser[] = JSON.parse(usersString);
+  const users: IUser[] = JSON.parse(usersString);
 
-  // 2. Buscar usuario que coincida con email y password
-  const usuarioEncontrado = Users.find(
-    (u) => u.email === email && u.password === password
+  // 2. Buscar usuario por mail y contraseña
+  const usuarioEncontrado = users.find(
+    (u) => u.mail === email && u.password === password,
   );
 
-  // 3. Validar si existe el usuario
+  // 3. Validar que exista
   if (!usuarioEncontrado) {
-    alert("Credenciales incorrectas. Inténtalo de nuevo.");
+    alert("Mail o contraseña incorrectos.");
     return;
   }
 
-  // 4. Iniciar sesión (Guardar en userData)
+  // 4. Guardamos la sesion
   const sesion: IUser = {
-    email: usuarioEncontrado.email,
-    password: usuarioEncontrado.password,
-    loggedIn: false,
-    role: rol
+    id: usuarioEncontrado.id,
+    nombre: usuarioEncontrado.nombre,
+    apellido: usuarioEncontrado.apellido,
+    mail: usuarioEncontrado.mail,
+    celular: usuarioEncontrado.celular,
+    rol: usuarioEncontrado.rol,
   };
 
   localStorage.setItem("userData", JSON.stringify(sesion));
 
-  // 5. Redireccionar según el rol
-  const ruta = rol === "admin" 
-    ? "/src/pages/admin/home/home.html" 
-    : "/src/pages/client/home/home.html";
-  
-  window.location.href = ruta;
+  /// 5. Redirreccion segun rol
+  const ruta =
+    usuarioEncontrado.rol === "ADMIN"
+      ? "/src/pages/admin/home/home.html"
+      : "/src/pages/client/home/home.html";
+
+      navigate(ruta);
 });

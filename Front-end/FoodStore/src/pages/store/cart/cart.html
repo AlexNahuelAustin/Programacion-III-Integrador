@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodStore - Carrito</title>
+    <link rel="stylesheet" href="../../../style.css">
+</head>
+
+<body class="body--carrito">
+    <header class="header">
+        <div class="header-left">
+            <a href="/src/pages/store/home/home.html" class="logo-link">
+                <img src="/images/FoodStore.png" alt="logo de FoodStore">
+            </a>
+        </div>
+        <nav class="header-nav">
+            <a href="/src/pages/store/home/home.html">Inicio</a>
+            <a href="/src/pages/client/orders/orders.html">Mis Pedidos</a>
+            <a href="/src/pages/admin/home/home.html" id="adminLink" style="display: none;">Administracion</a>
+        </nav>
+        <div class="header-right">
+            <a href="/src/pages/store/cart/cart.html" class="carrito-link">
+                🛒 <span id="carritoContador">0</span>
+            </a>
+            <span id="nombreUsuario" class="nombre-usuario">Usuario</span>
+            <button id="logoutButton" class="btn-logout">Cerrar Sesion</button>
+        </div>
+    </header>
+
+    <main class="contenedor-carrito">
+        <h1>Mi Carrito</h1>
+
+        <div id="carrito-vacio" class="carrito-vacio" style="display: none;">
+            <p>Tu carrito esta vacio</p>
+            <a href="../home/home.html" class="btn-volver">Ir al catalogo</a>
+        </div>
+
+        <div id="carrito-contenido">
+            <div id="items-carrito" class="items-carrito"></div>
+
+            <aside class="resumen-carrito">
+                <h2>Resumen del Pedido</h2>
+                <div class="resumen-item">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">$0</span>
+                </div>
+                <div class="resumen-item">
+                    <span>Envio:</span>
+                    <span id="envio">$0</span>
+                </div>
+                <hr>
+                <div class="resumen-item resumen-total">
+                    <span>Total:</span>
+                    <span id="total">$0</span>
+                </div>
+                <button id="btn-proceder" class="btn-proceder">Proceder al Pago</button>
+                <button id="btn-vaciar" class="btn-vaciar">Vaciar Carrito</button>
+            </aside>
+        </div>
+    </main>
+
+    
+    <footer>
+        <div class="footer-contenido">
+            <p>&copy; 2026 Food Store. Todos los derechos reservados.</p>
+            <nav class="footer-links">
+                <a href="#">Términos y Condiciones</a>
+                <a href="#">Privacidad</a>
+                <a href="#">Contacto</a>
+            </nav>
+        </div>
+    </footer>
+    <script type="module" src="./cart.ts"></script>
+</body>
+
+</html>
