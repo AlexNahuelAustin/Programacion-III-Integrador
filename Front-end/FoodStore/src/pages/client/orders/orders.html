@@ -3,34 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodStore - Detalle del Producto</title>
+    <title>FoodStore - Mis Pedidos</title>
     <link rel="stylesheet" href="../../../style.css">
 </head>
 <body>
     <header class="header">
         <div class="header-izquierda">
             <a href="/src/pages/store/home/home.html" class="logo-link">
-                <img src="../../../assets/imagen/FoodStore.png" alt="logo de FoodStore">
+                <img src="../../../assets/imagen/FoodStore.png" alt="logo">
             </a>
         </div>
         <nav class="header-nav">
             <a href="/src/pages/store/home/home.html">Inicio</a>
             <a href="/src/pages/client/orders/orders.html">Mis Pedidos</a>
-            <a href="/src/pages/admin/home/products/products.html" id="adminLink" style="display: none;">Administracion</a>
         </nav>
         <div class="header-derecha">
             <a href="/src/pages/store/cart/cart.html" class="carrito-link">
                 🛒 <span id="carritoContador">0</span>
             </a>
             <span id="nombreUsuario" class="nombre-usuario">Usuario</span>
-            <a href="/src/pages/store/home/home.html" class="btn-catalogo">Catalogo</a>
             <button id="logoutButton" class="btn-logout">Cerrar Sesion</button>
         </div>
     </header>
 
     <main class="main">
-        <a href="/src/pages/store/home/home.html" class="btn-volver">← Volver</a>
-        <div id="contenedor-detail" class="contenedor-detail"></div>
+        <h1>Mis Pedidos</h1>
+        <div id="tabla-pedidos"></div>
     </main>
 
     <footer>
@@ -44,6 +42,6 @@
         </div>
     </footer>
 
-    <script type="module" src="./productDetail.ts"></script>
+    <script type="module" src="./orders.ts"></script>
 </body>
 </html>

@@ -1,47 +1,58 @@
 import type { IUser } from "../../../types/IUser";
+import { navigate } from "../../../utils/navigate";
 
-// Seleccionar elementos
-const formulario = document.getElementById(
-  "registro",
-) as HTMLFormElement;
+const formulario = document.getElementById("registro") as HTMLFormElement;
 const mensaje = document.getElementById("mensaje") as HTMLDivElement;
 
-// Evento de envío del formulario
+// Manejar envío del formulario
 formulario?.addEventListener("submit", (event: Event) => {
   event.preventDefault();
 
   // Obtener valores del formulario
-  const formData = new FormData(formulario);
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const nombre = (document.getElementById("nombre") as HTMLInputElement).value.trim();
+  const apellido = (document.getElementById("apellido") as HTMLInputElement).value.trim();
+  const mail = (document.getElementById("email") as HTMLInputElement).value.trim();
+  const celular = (document.getElementById("celular") as HTMLInputElement).value.trim();
+  const password = (document.getElementById("password") as HTMLInputElement).value.trim();
 
-  // Crear usuario
+  // Validar que todos los campos estén completos
+  if (!nombre || !apellido || !mail || !celular || !password) {
+    mensaje.textContent = "Por favor completa todos los campos";
+    mensaje.style.color = "red";
+    return;
+  }
+
+  // Crear objeto usuario nuevo
   const nuevoUsuario: IUser = {
-    email,
+    id: Date.now(),
+    nombre,
+    apellido,
+    mail,
+    celular,
     password,
-    loggedIn: false,
-    role: "client",
+    rol: "USUARIO",
   };
 
-  // obtener usuarios
+  // Obtener usuarios existentes
   const users = JSON.parse(localStorage.getItem("Users") || "[]") as IUser[];
 
-  //Verificar si el email ya existe
-  const usuarioExistente = users.find((user) => user.email === email);
+  // Verificar si el email ya está registrado
+  const usuarioExistente = users.find((user) => user.mail === mail);
 
   if (usuarioExistente) {
-    mensaje.textContent = "El email ya está registrado.";
-     mensaje.style.color = "red";
-     return;
-    } 
-    // Agregar nuevo usuario a la lista
-    users.push(nuevoUsuario);
-    localStorage.setItem("Users",JSON.stringify(users));
-    mensaje.textContent ="Regristro exitoso. Ahora puedes iniciar sesión.";
-    mensaje.style.color = "green";
+    mensaje.textContent = "El email ya esta registrado.";
+    mensaje.style.color = "red";
+    return;
+  }
 
-    setTimeout(() => {
-        window.location.href = "../login/login.html";
-    }, 2500);
-  
+  // Guardar nuevo usuario
+  users.push(nuevoUsuario);
+  localStorage.setItem("Users", JSON.stringify(users));
+  mensaje.textContent = "Registro exitoso. Redirigiendo a login...";
+  mensaje.style.color = "green";
+
+  // Redirigir a login después de 2 segundos
+  setTimeout(() => {
+    navigate("/src/pages/auth/login/login.html");
+  }, 2000);
 });

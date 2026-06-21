@@ -1,9 +1,8 @@
 import type { IProducto } from "../../../types/IProducto";
 import type { IUser } from "../../../types/IUser";
-import { cerrarSesion } from "../../../utils/auth";
 import ProductoData from "../../../data/productos.json";
 
-// Header dinamico
+// Actualizar nombre usuario en header y mostrar admin si corresponde
 const actualizarHeader = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -18,17 +17,21 @@ const actualizarHeader = () => {
   }
 };
 
+// Obtener ID del producto de la URL
 const params = new URLSearchParams(window.location.search);
 const id = parseInt(params.get("id") || "0");
 
+// Buscar producto por ID
 const producto = ProductoData.find((p) => p.id === id);
 
+// Validar que el producto exista
 if (!producto) {
   alert("Producto no encontrado");
   window.location.href = "/src/pages/store/home/home.html";
   throw new Error("Producto no existe");
 }
 
+// Renderizar detalles del producto
 const renderizarProducto = () => {
   const contenedor = document.getElementById("contenedor-detail");
   if (!contenedor) return;
@@ -54,32 +57,33 @@ const renderizarProducto = () => {
   agregarEventListeners();
 };
 
+// Agregar event listeners a los botones
 const agregarEventListeners = () => {
   const cantidadInput = document.getElementById("cantidad") as HTMLInputElement;
   const btnMas = document.getElementById("btnMas");
   const btnMenos = document.getElementById("btnMenos");
   const btnAgregar = document.getElementById("btnAgregar");
 
-  // Botón +
+  // Botón aumentar cantidad
   btnMas?.addEventListener("click", () => {
     cantidadInput.value = String(parseInt(cantidadInput.value) + 1);
   });
 
-  // Botón -
+  // Botón disminuir cantidad
   btnMenos?.addEventListener("click", () => {
     if (parseInt(cantidadInput.value) > 1) {
       cantidadInput.value = String(parseInt(cantidadInput.value) - 1);
     }
   });
 
-  // Botón Agregar
+  // Botón agregar al carrito
   btnAgregar?.addEventListener("click", () => {
     const cantidad = parseInt(cantidadInput.value);
     agregarAlCarrito(cantidad);
   });
 };
 
-// Agregar al carrito
+// Agregar producto al carrito con cantidad especificada
 const agregarAlCarrito = (cantidad: number) => {
   const carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
   const existe = carrito.find((item: IProducto & { cantidad: number }) => item.id === producto.id);
@@ -95,7 +99,7 @@ const agregarAlCarrito = (cantidad: number) => {
   alert(`${producto.nombre} agregado al carrito`);
 };
 
-// Actualizar contador
+// Actualizar contador de productos en header
 const actualizarContador = () => {
   const carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
   const total = carrito.reduce((acc: number, item: { cantidad: number }) => acc + item.cantidad, 0);

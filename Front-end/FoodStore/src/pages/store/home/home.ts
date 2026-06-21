@@ -5,8 +5,7 @@ import { cerrarSesion } from "../../../utils/auth";
 import productosData from "../../../data/productos.json";
 import categoriasData from "../../../data/categorias.json"
 
-
-// Header dinamico
+// Actualizar nombre usuario en header y mostrar admin si corresponde
 const actualizarHeader = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -20,15 +19,18 @@ const actualizarHeader = () => {
   }
 };
 
+// Filtrar solo productos disponibles
 const productos: IProducto[] = productosData.filter(p => p.disponible);
 const categorias: ICategoria[] = categoriasData;
 
+// Event listener para cerrar sesión
 document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
 
-// Renderizar categorias
+// Cargar categorías en sidebar
 const cargarCategorias = () => {
   const ul = document.querySelector<HTMLUListElement>("ul");
 
+  // Botón "todos los productos"
   const li = document.createElement("li");
   li.innerHTML = `<a href="#" class="list-categorias">todos los productos</a>`;
 
@@ -38,6 +40,7 @@ const cargarCategorias = () => {
   });
   ul?.appendChild(li);
 
+  // Categorías dinámicas
   categorias.forEach((categoria) => {
     const li = document.createElement("li");
     li.innerHTML = `<a href="#" class="list-categoria">${categoria.nombre}</a>`;
@@ -52,7 +55,7 @@ const cargarCategorias = () => {
   });
 };
 
-// Renderizar productos
+// Cargar y renderizar productos
 const cargarProductos = (lista: IProducto[]) => {
   const contenedor = document.querySelector<HTMLDivElement>(
     "#contenedor-productos"
@@ -75,16 +78,16 @@ const cargarProductos = (lista: IProducto[]) => {
     `;
     contenedor.appendChild(card);
     
- // Click en tarjeta → va a detalle
+    // Click en tarjeta → ir a detalle del producto
     card.addEventListener("click", (e) => {
-      if ((e.target as HTMLElement).className !== "btn-agregar") {
+      if ((e.target as HTMLElement).className !== "btn") {
         window.location.href = `/src/pages/store/productDetail/productDetail.html?id=${producto.id}`;
       }
     });
 
-    // Click en botón → agrega al carrito
+    // Click en botón → agregar al carrito
     card
-      .querySelector<HTMLButtonElement>(".btn-agregar")
+      .querySelector<HTMLButtonElement>(".btn")
       ?.addEventListener("click", (e) => {
         e.stopPropagation();
         agregarAlCarrito(producto);
@@ -92,7 +95,7 @@ const cargarProductos = (lista: IProducto[]) => {
   });
 };
 
-// Buscador
+// Buscador de productos
 document
   .querySelector<HTMLInputElement>("#buscador")
   ?.addEventListener("input", (e) => {
@@ -104,7 +107,7 @@ document
     cargarProductos(filtrado);
   });
 
-// Agregar al carrito
+// Agregar producto al carrito
 const agregarAlCarrito = (producto: IProducto) => {
   const carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
   const existe = carrito.find(
@@ -122,7 +125,7 @@ const agregarAlCarrito = (producto: IProducto) => {
   alert(`${producto.nombre} agregado al carrito`);
 };
 
-// Actualizar contador
+// Actualizar contador del carrito en header
 const actualizarContador = () => {
   const carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
   const total = carrito.reduce(
@@ -133,8 +136,33 @@ const actualizarContador = () => {
   if (contador) contador.textContent = `${total}`;
 };
 
+// Mostrar carrito si NO es admin
+const mostrarCarrito = () => {
+  const userData = localStorage.getItem("userData");
+  if (userData) {
+    const usuario: IUser = JSON.parse(userData);
+    const carritoLink = document.querySelector<HTMLElement>(".carrito-link");
+    if (usuario.rol === "ADMIN" && carritoLink) {
+      carritoLink.style.display = "none";
+    }
+  }
+};
+// Ocultar Mis Pedidos si es admin
+const ocultarMisPedidos = () => {
+  const userData = localStorage.getItem("userData");
+  if (userData) {
+    const usuario: IUser = JSON.parse(userData);
+    if (usuario.rol === "ADMIN") {
+      const misPedidosLink = document.querySelector<HTMLAnchorElement>('a[href="/src/pages/client/orders/orders.html"]');
+      if (misPedidosLink) misPedidosLink.style.display = "none";
+    }
+  }
+};
+
 // Inicializar
 actualizarHeader();
 cargarCategorias();
 cargarProductos(productos);
 actualizarContador();
+mostrarCarrito();
+ocultarMisPedidos();

@@ -1,5 +1,4 @@
 import type { IUser } from "../../../types/IUser";
-import type { Rol } from "../../../types/Rol";
 import { navigate } from "../../../utils/navigate";
 
 const formulario = document.getElementById("login") as HTMLFormElement;
@@ -13,13 +12,13 @@ formulario?.addEventListener("submit", (e: SubmitEvent) => {
   const email = inputEmail.value.trim();
   const password = inputContraseña.value.trim();
 
-  /// Validar que no este vacio
+  // Validar campos
   if (!email || !password) {
     alert("Por favor completa todos los campos");
     return;
   }
 
-  // Obtenemos usuario del LocalStore
+  // Obtener usuarios de localStorage
   const usersString = localStorage.getItem("Users");
 
   if (!usersString) {
@@ -29,18 +28,18 @@ formulario?.addEventListener("submit", (e: SubmitEvent) => {
 
   const users: IUser[] = JSON.parse(usersString);
 
-  // 2. Buscar usuario por mail y contraseña
+  // Buscar usuario por mail y contraseña
   const usuarioEncontrado = users.find(
     (u) => u.mail === email && u.password === password,
   );
 
-  // 3. Validar que exista
+  // Validar que exista
   if (!usuarioEncontrado) {
     alert("Mail o contraseña incorrectos.");
     return;
   }
 
-  // 4. Guardamos la sesion
+  // Guardar sesion
   const sesion: IUser = {
     id: usuarioEncontrado.id,
     nombre: usuarioEncontrado.nombre,
@@ -52,11 +51,18 @@ formulario?.addEventListener("submit", (e: SubmitEvent) => {
 
   localStorage.setItem("userData", JSON.stringify(sesion));
 
-  /// 5. Redirreccion segun rol
-  const ruta =
-    usuarioEncontrado.rol === "ADMIN"
-      ? "/src/pages/admin/home/home.html"
-      : "/src/pages/client/home/home.html";
+  // Restaurar carrito del usuario o limpiar si no tiene
+  const carritoGuardado = localStorage.getItem(`carrito_${usuarioEncontrado.id}`);
+  if (carritoGuardado) {
+    localStorage.setItem("carrito", carritoGuardado);
+  } else {
+    localStorage.removeItem("carrito");
+  }
 
-      navigate(ruta);
+  // Redireccion segun rol
+const ruta =
+  usuarioEncontrado.rol === "ADMIN"
+    ? "/src/pages/admin/home/adminHome/adminHome.html"
+    : "/src/pages/store/home/home.html";
+  navigate(ruta);
 });

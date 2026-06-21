@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodStore - Panel de Administración</title>
+        <link rel="stylesheet" href="../../../../style.css">
+</head>
+
+<body class="body--admin">
+    <header class="header">
+        <div class="header-left">
+            <a href="/src/pages/admin/home/adminHome/adminHome.html" class="logo-link">
+                <img src="../../../../assets/imagen/FoodStore.png" alt="logo de FoodStore">
+            </a>
+        </div>
+        <nav class="header-nav">
+            <a href="/src/pages/store/home/home.html">Volver al Catálogo</a>
+        </nav>
+        <div class="header-right">
+            <span id="nombreUsuario" class="nombre-usuario">Admin</span>
+            <button id="logoutButton" class="btn-logout">Cerrar Sesion</button>
+        </div>
+    </header>
+
+    <main class="admin-container">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <h2>Administración</h2>
+                <p>Panel de control</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/src/pages/admin/home/adminHome/adminHome.html" class="nav-item active">
+                    📊 Dashboard
+                </a>
+                <a href="/src/pages/admin/home/categories/categories.html" class="nav-item">
+                    📁 Categorias
+                </a>
+                <a href="/src/pages/admin/home/products/products.html" class="nav-item">
+                    🍔 Productos
+                </a>
+                <a href="/src/pages/admin/home/orders/orders.html" class="nav-item">
+                    📦 Pedidos
+                </a>
+                <a href="/src/pages/store/home/home.html" class="nav-item">
+                    🏪 Ver Tienda
+                </a>
+            </nav>
+        </aside>
+
+        <section class="admin-content">
+            <h1>Panel de Administración</h1>
+
+            <div class="admin-cards">
+                <div class="admin-card card-categorias">
+                    <div class="card-icon">📁</div>
+                    <h3>Categorias</h3>
+                    <p class="card-count" id="count-categorias">0</p>
+                    <a href="/src/pages/admin/home/categories/categories.html" class="btn-gestionar">Gestionar</a>
+                </div>
+
+                <div class="admin-card card-productos">
+                    <div class="card-icon">🍔</div>
+                    <h3>Productos</h3>
+                    <p class="card-count" id="count-productos">0</p>
+                    <a href="/src/pages/admin/home/products/products.html" class="btn-gestionar">Gestionar</a>
+                </div>
+
+                <div class="admin-card card-pedidos">
+                    <div class="card-icon">📦</div>
+                    <h3>Pedidos</h3>
+                    <p class="card-count" id="count-pedidos">0</p>
+                    <a href="/src/pages/admin/home/orders/orders.html" class="btn-gestionar">Gestionar</a>
+                </div>
+
+                <div class="admin-card card-disponibles">
+                    <div class="card-icon">✅</div>
+                    <h3>Disponibles</h3>
+                    <p class="card-subtitle">Productos activos</p>
+                    <p class="card-count" id="count-disponibles">0</p>
+                </div>
+            </div>
+
+            <div class="admin-resumen">
+                <h2>📊 Resumen Rápido</h2>
+                <div class="resumen-content">
+                    <p id="resumen-texto">Cargando estadísticas...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-contenido">
+            <p>&copy; 2026 Food Store. Todos los derechos reservados.</p>
+            <nav class="footer-links">
+                <a href="#">Términos y Condiciones</a>
+                <a href="#">Privacidad</a>
+                <a href="#">Contacto</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script type="module" src="./adminHome.ts"></script>
+</body>
+
+</html>

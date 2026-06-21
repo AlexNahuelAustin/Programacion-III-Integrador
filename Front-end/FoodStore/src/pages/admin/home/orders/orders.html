@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FoodStore - Categorías</title>
+    <title>FoodStore - Pedidos</title>
     <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="body--admin">
     <header class="header">
-        <div class="header-left">
-            <a href="/src/pages/admin/home/adminHome/adminHome.html" class="logo-link">
+        <div class="header-izquierda">
+            <a href="/src/pages/admin/home/products/products.html" class="logo-link">
                 <img src="../../../../assets/imagen/FoodStore.png" alt="logo">
             </a>
         </div>
@@ -19,23 +19,23 @@
             <a href="/src/pages/admin/home/products/products.html">Productos</a>
             <a href="/src/pages/admin/home/orders/orders.html">Pedidos</a>
         </nav>
-        <div class="header-right">
+        <div class="header-derecha">
             <span id="nombreUsuario" class="nombre-usuario">Usuario</span>
             <button id="logoutButton" class="btn-logout">Cerrar Sesion</button>
         </div>
     </header>
 
-    <main class="admin-container">
-        <aside class="admin-sidebar">
+    <main class="main">
+         <aside class="admin-sidebar">
             <div class="sidebar-header">
                 <h2>Administración</h2>
                 <p>Panel de control</p>
             </div>
             <nav class="sidebar-nav">
-                <a href="/src/pages/admin/home/adminHome/adminHome.html" class="nav-item">
+                <a href="/src/pages/admin/home/adminHome/adminHome.html" class="nav-item active">
                     📊 Dashboard
                 </a>
-                <a href="/src/pages/admin/home/categories/categories.html" class="nav-item active">
+                <a href="/src/pages/admin/home/categories/categories.html" class="nav-item">
                     📁 Categorias
                 </a>
                 <a href="/src/pages/admin/home/products/products.html" class="nav-item">
@@ -47,23 +47,8 @@
                 <a href="/src/pages/store/home/home.html" class="nav-item">
                     🏪 Ver Tienda
                 </a>
-            </nav>
-        </aside>
-
-        <section class="admin-content">
-            <h1>Gestión de Categorías</h1>
-            <table class="tabla-admin">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-categorias">
-                </tbody>
-            </table>
-        </section>
+        <h1>Pedidos</h1>
+        <div id="tabla-pedidos"></div>
     </main>
 
     <footer>
@@ -77,8 +62,6 @@
         </div>
     </footer>
 
-    <script type="module" src="./categories.ts"></script>
-</body>
-</html>type="module" src="./categories.ts"></script>
+    <script type="module" src="./orders.ts"></script>
 </body>
 </html>

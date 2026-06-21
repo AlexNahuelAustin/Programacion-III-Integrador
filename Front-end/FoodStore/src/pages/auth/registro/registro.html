@@ -1,38 +1,40 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro - Food Store</title>
     <link rel="stylesheet" href="../../../style.css">
 </head>
-
 <body class="body--registro--login">
     <section class="login--registro">
         <h1>Registro</h1>
         <form class="login--registro-form" id="registro">
-
+            <div>
+                <label for="nombre">Nombre</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Juan" required>
+            </div>
+            <div>
+                <label for="apellido">Apellido</label>
+                <input type="text" id="apellido" name="apellido" placeholder="Perez" required>
+            </div>
             <div>
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="micorreo@example.com" required>
             </div>
             <div>
+                <label for="celular">Celular</label>
+                <input type="tel" id="celular" name="celular" placeholder="1198765432" required>
+            </div>
+            <div>
                 <label for="password">Contraseña</label>
                 <input type="password" id="password" name="password" placeholder="********" required>
             </div>
-
-
             <button type="submit" class="login--form--boton">Registrarse</button>
-
         </form>
-
-
         <div id="mensaje"></div>
     </section>
 
-
-    <script src="./registro.js" type="module"></script>
+    <script type="module" src="./registro.ts"></script>
 </body>
-
 </html>
