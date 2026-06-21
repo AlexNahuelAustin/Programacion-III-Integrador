@@ -1,10 +1,11 @@
 import type { IPedido } from "../../../types/IPedido";
 import type { IUser } from "../../../types/IUser";
 import { cerrarSesion, checkAuhtUser } from "../../../utils/auth";
-import pedidosData from "../../../data/pedidos.json";
+import { obtenerPedidos } from "../../../utils/dataService";
 
-// Verificar que el usuario sea USUARIO (no ADMIN)
 checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/store/home/home.html", "USUARIO");
+
+let pedidosData: IPedido[] = [];
 
 // Actualizar nombre usuario y carrito en header
 const actualizarHeader = () => {
@@ -37,37 +38,32 @@ const renderizarTabla = () => {
   const usuario: IUser = JSON.parse(userData);
 
   // Obtener pedidos del JSON + localStorage
-  const pedidosJson = (pedidosData as IPedido[]).filter(p => Number(p.usuarioDto.id) === Number(usuario.id));
+  const pedidosJson = pedidosData.filter(p => Number(p.usuarioDto.id) === Number(usuario.id));
   const pedidosLocal: IPedido[] = JSON.parse(localStorage.getItem(`pedidos_${usuario.id}`) || "[]");
   const misPedidos = [...pedidosJson, ...pedidosLocal];
 
-  let html = '<div class="cards-grid">';
+  let html = '<div class="pedidos-lista">';
 
   // Si no hay pedidos, mostrar mensaje
   if (misPedidos.length === 0) {
-    html += '<p>No tienes pedidos</p>';
+    html += '<p class="sin-pedidos">No tienes pedidos</p>';
   } else {
     // Renderizar cada pedido con sus productos
     misPedidos.forEach((pedido: IPedido) => {
-      const productosHtml = pedido.detalles.map(detalle => `
-        <div class="pedido-detalle">
-          <img src="${detalle.producto.imagen}" alt="${detalle.producto.nombre}">
-          <div>
-            <p><strong>${detalle.producto.nombre}</strong></p>
-            <p>Cantidad: ${detalle.cantidad}</p>
-            <p>Subtotal: $${detalle.subtotal.toLocaleString("es-AR")}</p>
-          </div>
-        </div>
-      `).join("");
+      const productosTexto = pedido.detalles.map(detalle => 
+        `• ${detalle.producto.nombre} (x${detalle.cantidad})`
+      ).join("<br>");
 
       html += `
-        <div class="card">
-          <h3>Pedido #${pedido.id}</h3>
-          <p><strong>Fecha:</strong> ${pedido.fecha}</p>
-          <p><strong>Estado:</strong> ${pedido.estado}</p>
-          <p><strong>Forma de Pago:</strong> ${pedido.formaPago}</p>
-          <div class="pedido-productos">${productosHtml}</div>
-          <p class="pedido-total"><strong>Total: $${pedido.total.toLocaleString("es-AR")}</strong></p>
+        <div class="pedido-item-horizontal">
+          <div class="pedido-izq">
+            <h3>Pedido #${pedido.id}</h3>
+            <p class="pedido-meta">📅 ${pedido.fecha} | Estado: <span>${pedido.estado}</span> | Pago: ${pedido.formaPago}</p>
+            <div class="pedido-detalles-lista">${productosTexto}</div>
+          </div>
+          <div class="pedido-der">
+            <span class="pedido-monto-total">$${pedido.total.toLocaleString("es-AR")}</span>
+          </div>
         </div>
       `;
     });
@@ -77,9 +73,15 @@ const renderizarTabla = () => {
   contenedor.innerHTML = html;
 };
 
+// Inicializar async
+const init = async () => {
+  pedidosData = await obtenerPedidos();
+  actualizarHeader();
+  renderizarTabla();
+};
+
 // Event listeners
 document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
 
-// Inicializar
-actualizarHeader();
-renderizarTabla();
+// Ejecutar
+init();

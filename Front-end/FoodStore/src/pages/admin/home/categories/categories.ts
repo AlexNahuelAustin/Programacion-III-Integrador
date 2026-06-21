@@ -1,7 +1,10 @@
 import type { ICategoria } from "../../../../types/ICategoria";
 import type { IUser } from "../../../../types/IUser";
-import { cerrarSesion } from "../../../../utils/auth";
-import categoriasData from "../../../../data/categorias.json";
+import { cerrarSesion, checkAuhtUser } from "../../../../utils/auth";
+import { obtenerCategorias } from "../../../../utils/dataService";
+const categoriasData = await obtenerCategorias();
+
+checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/client/orders/orders.html", "ADMIN");
 
 // Actualizar nombre usuario en header
 const actualizarHeader = () => {
@@ -14,24 +17,22 @@ const actualizarHeader = () => {
   }
 };
 
-// Renderizar tarjetas de categorias
-const renderizarTarjetas = () => {
-  const contenedor = document.getElementById("tabla-categorias");
-  if (!contenedor) return;
+// Renderizar tabla
+const renderizarTabla = () => {
+  const tbody = document.getElementById("tbody-categorias");
+  if (!tbody) return;
 
-  let html = '<div class="cards-grid">';
+  tbody.innerHTML = "";
 
   categoriasData.forEach((categoria: ICategoria) => {
-    html += `
-      <div class="card">
-        <h3>${categoria.nombre}</h3>
-        <p>${categoria.descripcion}</p>
-      </div>
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${categoria.id}</td>
+      <td>${categoria.nombre}</td>
+      <td>${categoria.descripcion}</td>
     `;
+    tbody.appendChild(tr);
   });
-
-  html += '</div>';
-  contenedor.innerHTML = html;
 };
 
 // Event listeners
@@ -39,4 +40,4 @@ document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion)
 
 // Inicializar
 actualizarHeader();
-renderizarTarjetas();
+renderizarTabla();

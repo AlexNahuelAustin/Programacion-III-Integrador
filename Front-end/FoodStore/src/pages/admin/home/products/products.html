@@ -9,15 +9,12 @@
 <body class="body--admin">
     <header class="header">
         <div class="header-left">
-            <a href="/src/pages/admin/adminhome/adminhome.html" class="logo-link">
-              <img src="../../../../assets/imagen/FoodStore.png" alt="logo">
+            <a href="/src/pages/admin/home/adminHome/adminHome.html" class="logo-link">
+                <img src="../../../../assets/imagen/FoodStore.png" alt="logo">
             </a>
         </div>
         <nav class="header-nav">
-            <a href="/src/pages/admin/home/adminHome/adminHome.html">Inicio</a>
-            <a href="/src/pages/admin/home/categories/categories.html">Categorias</a>
-            <a href="/src/pages/admin/home/products/products.html">Productos</a>
-            <a href="/src/pages/admin/home/orders/orders.html">Pedidos</a>
+            <a href="/src/pages/store/home/home.html">Volver al Catálogo</a>
         </nav>
         <div class="header-right">
             <span id="nombreUsuario" class="nombre-usuario">Usuario</span>
@@ -25,20 +22,20 @@
         </div>
     </header>
 
-    <main class="main">
-         <aside class="admin-sidebar">
+    <main class="admin-container">
+        <aside class="admin-sidebar">
             <div class="sidebar-header">
                 <h2>Administración</h2>
                 <p>Panel de control</p>
             </div>
             <nav class="sidebar-nav">
-                <a href="/src/pages/admin/home/adminHome/adminHome.html" class="nav-item active">
+                <a href="/src/pages/admin/home/adminHome/adminHome.html" class="nav-item">
                     📊 Dashboard
                 </a>
                 <a href="/src/pages/admin/home/categories/categories.html" class="nav-item">
                     📁 Categorias
                 </a>
-                <a href="/src/pages/admin/home/products/products.html" class="nav-item">
+                <a href="/src/pages/admin/home/products/products.html" class="nav-item active">
                     🍔 Productos
                 </a>
                 <a href="/src/pages/admin/home/orders/orders.html" class="nav-item">
@@ -47,22 +44,27 @@
                 <a href="/src/pages/store/home/home.html" class="nav-item">
                     🏪 Ver Tienda
                 </a>
-        <h1>Gestión de Productos</h1>
-        <table class="tabla-admin">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Imagen</th>
-                    <th>Nombre</th>
-                    <th>Descripción</th>
-                    <th>Precio</th>
-                    <th>Stock</th>
-                    <th>Estado</th>
-                </tr>
-            </thead>
-            <tbody id="tbody-productos">
-            </tbody>
-        </table>
+            </nav>
+        </aside>
+
+        <section class="admin-content">
+            <h1>Gestión de Productos</h1>
+            <table class="tabla-admin">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Imagen</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-productos">
+                </tbody>
+            </table>
+        </section>
     </main>
 
     <footer>

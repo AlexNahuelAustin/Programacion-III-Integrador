@@ -1,6 +1,8 @@
 import type { IProducto } from "../../../types/IProducto";
 import type { IUser } from "../../../types/IUser";
-import ProductoData from "../../../data/productos.json";
+import { obtenerProductos } from "../../../utils/dataService";
+import { cerrarSesion } from "../../../utils/auth";
+const ProductoData = await obtenerProductos();
 
 // Actualizar nombre usuario en header y mostrar admin si corresponde
 const actualizarHeader = () => {
@@ -22,7 +24,7 @@ const params = new URLSearchParams(window.location.search);
 const id = parseInt(params.get("id") || "0");
 
 // Buscar producto por ID
-const producto = ProductoData.find((p) => p.id === id);
+const producto = ProductoData.find((p: IProducto) => p.id === id);
 
 // Validar que el producto exista
 if (!producto) {
@@ -96,7 +98,6 @@ const agregarAlCarrito = (cantidad: number) => {
 
   localStorage.setItem("carrito", JSON.stringify(carrito));
   actualizarContador();
-  alert(`${producto.nombre} agregado al carrito`);
 };
 
 // Actualizar contador de productos en header
@@ -108,5 +109,6 @@ const actualizarContador = () => {
 };
 
 // Inicializar
+document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
 actualizarHeader();
 renderizarProducto();

@@ -1,7 +1,8 @@
 import type { IProducto } from "../../../../types/IProducto";
 import type { IUser } from "../../../../types/IUser";
 import { cerrarSesion, checkAuhtUser } from "../../../../utils/auth";
-import productosData from "../../../../data/productos.json";
+import { obtenerProductos } from "../../../../utils/dataService";
+const productosData = await obtenerProductos();
 
 checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/client/orders/orders.html", "ADMIN");
 

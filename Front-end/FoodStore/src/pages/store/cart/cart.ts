@@ -15,7 +15,7 @@ const actualizarHeader = () => {
   }
 };
 
-// Mostrar carrito (al inicio)
+// Mostrar carrito 
 const mostrarCarrito = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -28,7 +28,7 @@ const mostrarCarrito = () => {
 };
 
 // Obtener carrito de localStorage
-const obtenerCarrito = () => {
+const obtenerCarrito = (): (IProducto & { cantidad: number })[] => {
   const productosAgregados = localStorage.getItem("carrito");
   return productosAgregados ? JSON.parse(productosAgregados) : [];
 };
@@ -92,7 +92,7 @@ const calcularTotal = () => {
   }
 
   // Si hay productos, mostrar resumen y ocultar mensaje
-  if (carritoContenidoEl) carritoContenidoEl.style.display = "block";
+  if (carritoContenidoEl) carritoContenidoEl.style.display = "";
   if (carritoVacioEl) carritoVacioEl.style.display = "none";
 
   if (!totalEl) return;
@@ -181,14 +181,20 @@ const abrirCheckout = () => {
   
   const modal = document.getElementById("modal-checkout") as HTMLDivElement;
   const telefonoEl = document.getElementById("checkout-telefono") as HTMLInputElement;
+  const direccionEl = document.getElementById("checkout-direccion") as HTMLTextAreaElement;
   const totalEl = document.getElementById("checkout-total") as HTMLSpanElement;
   
-  telefonoEl.value = usuario.celular;
+
+  if (telefonoEl) telefonoEl.value = "";
+  if (direccionEl) direccionEl.value = "";
+  
   const totalConEnvio = carrito.reduce((sum:number, p: IProducto & { cantidad: number }) => sum + p.precio * p.cantidad, 0) + 1000;
   totalEl.textContent = totalConEnvio.toLocaleString("es-AR");
   
-  modal.style.display = "block";
+ 
+  modal.style.display = "flex";
 };
+
 
 // Cerrar modal de checkout
 const cerrarCheckout = () => {
@@ -207,9 +213,8 @@ const guardarPedido = () => {
   const telefonoEl = document.getElementById("checkout-telefono") as HTMLInputElement;
   const direccionEl = document.getElementById("checkout-direccion") as HTMLTextAreaElement;
   const metodoEl = document.getElementById("checkout-metodo") as HTMLSelectElement;
-  const notasEl = document.getElementById("checkout-notas") as HTMLTextAreaElement;
-  
-  const totalConEnvio = carrito.reduce((sum:number, p: IProducto & { cantidad: number }) => sum + p.precio * p.cantidad, 0) + 1000;
+
+  const totalConEnvio = carrito.reduce((sum: number, p: IProducto & { cantidad: number }) => sum + p.precio * p.cantidad, 0) + 1000;
   
   const nuevosPedidos = JSON.parse(localStorage.getItem(`pedidos_${usuario.id}`) || "[]");
   
@@ -254,6 +259,7 @@ document.getElementById("btn-vaciar")?.addEventListener("click", () => {
 });
 
 // Inicializar
+mostrarCarrito()
 actualizarHeader();
 productosDeCarrito();
 calcularTotal();

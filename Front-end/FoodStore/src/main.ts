@@ -1,5 +1,6 @@
 import type { IUser } from "./types/IUser";
-import usuariosData from "./data/usuarios.json";
+import { obtenerUsuarios } from "./utils/dataService";
+const usuariosData = await obtenerUsuarios();
 
 // Cargar usuarios del JSON al localStorage si no existen
 const cargarUsuarios = () => {
@@ -35,15 +36,15 @@ const protegerRuta = (): void => {
 
   // Bloquear ADMIN de rutas cliente
   if (rutaActual.includes("/client/") && usuario.rol === "ADMIN") {
-    window.location.href = "/src/pages/admin/adminhome/adminhome.html";
+    window.location.href = "/src/pages/admin/home/adminHome/adminHome.html";
     return;
   }
 
   // Redirigir desde la raíz según rol
   if (rutaActual === "/" || rutaActual === "/index.html") {
     const ruta = usuario.rol === "ADMIN"
-      ? "/src/pages/admin/adminhome/adminHome.html"
-      : "/src/pages/client/orders/orders.html";
+      ? "/src/pages/admin/home/adminHome/adminHome.html"
+      : "/src/pages/store/home/home.html";
     window.location.href = ruta;
     return;
   }

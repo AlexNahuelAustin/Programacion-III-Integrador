@@ -2,8 +2,9 @@ import type { IProducto } from "../../../types/IProducto";
 import type { ICategoria } from "../../../types/ICategoria";
 import type { IUser } from "../../../types/IUser";
 import { cerrarSesion } from "../../../utils/auth";
-import productosData from "../../../data/productos.json";
-import categoriasData from "../../../data/categorias.json"
+import { obtenerProductos, obtenerCategorias } from "../../../utils/dataService";
+const productosData = await obtenerProductos();
+const categoriasData = await obtenerCategorias();
 
 // Actualizar nombre usuario en header y mostrar admin si corresponde
 const actualizarHeader = () => {
@@ -20,7 +21,7 @@ const actualizarHeader = () => {
 };
 
 // Filtrar solo productos disponibles
-const productos: IProducto[] = productosData.filter(p => p.disponible);
+const productos: IProducto[] = productosData.filter((p: IProducto) => p.disponible);
 const categorias: ICategoria[] = categoriasData;
 
 // Event listener para cerrar sesión
@@ -36,7 +37,7 @@ const cargarCategorias = () => {
 
   li.addEventListener("click", (e) => {
     e.preventDefault();
-    cargarProductos(productosData.filter(p => p.disponible));
+    cargarProductos(productosData.filter((p: IProducto) => p.disponible));
   });
   ul?.appendChild(li);
 
@@ -47,7 +48,7 @@ const cargarCategorias = () => {
     li.addEventListener("click", (e) => {
       e.preventDefault();
       const filtrados = productosData.filter(
-        (p) => p.categoria.id === categoria.id && p.disponible
+        (p: IProducto) => p.categoria.id === categoria.id && p.disponible
       );
       cargarProductos(filtrados);
     });
@@ -101,7 +102,7 @@ document
   ?.addEventListener("input", (e) => {
     const texto = (e.target as HTMLInputElement).value.toLowerCase();
     const filtrado = productosData.filter(
-      (producto) =>
+      (producto: IProducto) =>
         producto.nombre.toLowerCase().includes(texto) && producto.disponible
     );
     cargarProductos(filtrado);
@@ -122,7 +123,6 @@ const agregarAlCarrito = (producto: IProducto) => {
 
   localStorage.setItem("carrito", JSON.stringify(carrito));
   actualizarContador();
-  alert(`${producto.nombre} agregado al carrito`);
 };
 
 // Actualizar contador del carrito en header

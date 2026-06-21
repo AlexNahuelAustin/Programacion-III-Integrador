@@ -1,11 +1,11 @@
-import type { IProducto } from "../../../../types/IProducto";
 import type { IUser } from "../../../../types/IUser";
-import ProductosData from "../../../../data/productos.json";
-import CategoriasData from "../../../../data/categorias.json";
-import PedidosData from "../../../../data/pedidos.json";
 import { cerrarSesion } from "../../../../utils/auth";
+import { obtenerProductos, obtenerCategorias, obtenerPedidos } from "../../../../utils/dataService";
 
-// Actualizar nombre usuario en header
+const ProductosData = await obtenerProductos();
+const CategoriasData = await obtenerCategorias();
+const PedidosData = await obtenerPedidos();
+
 const actualizarHeader = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -15,14 +15,12 @@ const actualizarHeader = () => {
   }
 };
 
-// Cargar estadísticas del dashboard
 const cargarEstadisticas = () => {
   const totalCategorias = CategoriasData.length;
   const totalProductos = ProductosData.length;
   const totalPedidos = PedidosData.length;
   const productosDisponibles = ProductosData.filter((p) => p.disponible).length;
 
-  // Actualizar contadores
   const countCategorias = document.getElementById("count-categorias");
   const countProductos = document.getElementById("count-productos");
   const countPedidos = document.getElementById("count-pedidos");
@@ -33,7 +31,6 @@ const cargarEstadisticas = () => {
   if (countPedidos) countPedidos.textContent = `${totalPedidos}`;
   if (countDisponibles) countDisponibles.textContent = `${productosDisponibles}`;
 
-  // Actualizar resumen
   const resumenTexto = document.getElementById("resumen-texto");
   if (resumenTexto) {
     resumenTexto.innerHTML = `
@@ -45,7 +42,6 @@ const cargarEstadisticas = () => {
   }
 };
 
-// Ocultar carrito si es admin
 const ocultarCarrito = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -57,9 +53,7 @@ const ocultarCarrito = () => {
   }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
-  actualizarHeader();
-  cargarEstadisticas();
-  ocultarCarrito();
-});
+document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
+actualizarHeader();
+cargarEstadisticas();
+ocultarCarrito();

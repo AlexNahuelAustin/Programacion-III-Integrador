@@ -1,7 +1,10 @@
 import type { IPedido } from "../../../../types/IPedido";
 import type { IUser } from "../../../../types/IUser";
-import { cerrarSesion } from "../../../../utils/auth";
-import pedidosData from "../../../../data/pedidos.json";
+import { cerrarSesion, checkAuhtUser } from "../../../../utils/auth";
+import { obtenerPedidos } from "../../../../utils/dataService";
+const pedidosData = await obtenerPedidos();
+
+checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/store/home/home.html", "ADMIN");
 
 // Actualizar nombre usuario en header
 const actualizarHeader = () => {
@@ -14,27 +17,24 @@ const actualizarHeader = () => {
   }
 };
 
-// Renderizar tarjetas de pedidos
+// Renderizar filas de pedidos
 const renderizarTarjetas = () => {
-  const contenedor = document.getElementById("tabla-pedidos");
-  if (!contenedor) return;
+  const tbody = document.getElementById("tbody-pedidos");
+  if (!tbody) return;
 
-  let html = '<div class="cards-grid">';
+  tbody.innerHTML = "";
 
-  pedidosData.forEach((pedido) => {
-    html += `
-      <div class="card">
-        <h3>Pedido #${pedido.id}</h3>
-        <p><strong>Fecha:</strong> ${pedido.fecha}</p>
-        <p><strong>Usuario:</strong> ${pedido.usuarioDto.nombre} ${pedido.usuarioDto.apellido}</p>
-        <p><strong>Total:</strong> $${pedido.total.toLocaleString("es-AR")}</p>
-        <p><strong>Estado:</strong> ${pedido.estado}</p>
-      </div>
+  pedidosData.forEach((pedido: IPedido) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${pedido.id}</td>
+      <td>${pedido.usuarioDto.nombre} ${pedido.usuarioDto.apellido}</td>
+      <td>$${pedido.total.toLocaleString("es-AR")}</td>
+      <td>${pedido.estado}</td>
+      <td>${pedido.fecha}</td>
     `;
+    tbody.appendChild(tr);
   });
-
-  html += '</div>';
-  contenedor.innerHTML = html;
 };
 
 // Event listeners

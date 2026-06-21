@@ -18,7 +18,8 @@
         <nav class="header-nav">
             <a href="/src/pages/store/home/home.html">Inicio</a>
             <a href="/src/pages/client/orders/orders.html">Mis Pedidos</a>
-            <a href="/src/pages/admin/home/products/products.html" id="adminLink" style="display: none;">Administracion</a>
+            <a href="/src/pages/admin/home/adminHome/adminHome.html" id="adminLink"
+                style="display: none;">Administracion</a>
         </nav>
         <div class="header-right">
             <a href="/src/pages/store/cart/cart.html" class="carrito-link">
@@ -36,10 +37,10 @@
             <h2>Confirmar Pedido</h2>
             <form id="form-checkout">
                 <label>Teléfono:</label>
-                <input type="tel" id="checkout-telefono" required>
+                <input type="tel" id="checkout-telefono" placeholder="Ej: 1126545611" required>
 
                 <label>Dirección de Entrega:</label>
-                <textarea id="checkout-direccion" required></textarea>
+                <textarea id="checkout-direccion" placeholder="Ej: Av. Siempreviva 742" required></textarea>
 
                 <label>Método de Pago:</label>
                 <select id="checkout-metodo" required>
