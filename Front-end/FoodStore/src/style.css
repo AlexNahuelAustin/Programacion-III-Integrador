@@ -781,6 +781,105 @@ body {
   border-color: var(--color-focus);
 }
 /*
+=== MODAL DETALLE PEDIDO (ADMIN) ===
+*/
+.modal-pedido-content {
+  max-width: 600px;
+}
+
+.modal-pedido-titulo {
+  font-size: 1.15rem;
+  color: var(--color-texto);
+  margin-bottom: 16px;
+  padding-right: 24px;
+}
+
+.modal-pedido-datos {
+  background-color: var(--color-fondo);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-pedido-datos p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--color-texto);
+}
+
+.modal-pedido-estado {
+  font-weight: bold;
+  color: var(--color--primario);
+}
+
+.modal-pedido-productos h3 {
+  font-size: 1rem;
+  color: var(--color-texto);
+  margin-bottom: 10px;
+}
+
+.modal-pedido-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-fondo);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+}
+
+.modal-pedido-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.modal-pedido-item-nombre {
+  font-weight: bold;
+  font-size: 0.95rem;
+  color: var(--color-texto);
+}
+
+.modal-pedido-item-cantidad {
+  font-size: 0.82rem;
+  color: #777;
+}
+
+.modal-pedido-item-precio {
+  font-weight: bold;
+  font-size: 1rem;
+  color: var(--color--primario);
+  white-space: nowrap;
+  margin-left: 12px;
+}
+
+.modal-pedido-totales {
+  border-top: 1px solid var(--color-borde);
+  margin-top: 14px;
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-pedido-fila-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: var(--color-texto);
+}
+
+.modal-pedido-fila-total--grande {
+  font-size: 1.15rem;
+  font-weight: bold;
+  color: var(--color--primario);
+  margin-top: 4px;
+}
+
+/*
 === ESTILOS ADMIN Y CLIENTE ===
 */
 /*

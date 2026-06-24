@@ -64,6 +64,9 @@ const cargarProductos = (lista: IProducto[]) => {
   if (!contenedor) return;
   contenedor.innerHTML = "";
 
+  const userData = localStorage.getItem("userData");
+  const esAdmin = userData ? JSON.parse(userData).rol === "ADMIN" : false;
+
   lista.forEach((producto) => {
     const card = document.createElement("article");
     card.className = "producto-card";
@@ -75,24 +78,28 @@ const cargarProductos = (lista: IProducto[]) => {
       <span class="${producto.disponible ? "disponible" : "no-disponible"}">
         ${producto.disponible ? "Disponible" : "No disponible"}
       </span>
-      <button class="btn">+ Agregar</button>
+      <button class="btn" ${esAdmin ? "disabled" : ""}>+ Agregar</button>
     `;
     contenedor.appendChild(card);
-    
-    // Click en tarjeta → ir a detalle del producto
-    card.addEventListener("click", (e) => {
-      if ((e.target as HTMLElement).className !== "btn") {
-        window.location.href = `/src/pages/store/productDetail/productDetail.html?id=${producto.id}`;
-      }
-    });
 
-    // Click en botón → agregar al carrito
-    card
-      .querySelector<HTMLButtonElement>(".btn")
-      ?.addEventListener("click", (e) => {
-        e.stopPropagation();
-        agregarAlCarrito(producto);
+    // Click en tarjeta → ir a detalle del producto (solo si no es admin)
+    if (!esAdmin) {
+      card.addEventListener("click", (e) => {
+        if ((e.target as HTMLElement).className !== "btn") {
+          window.location.href = `/src/pages/store/productDetail/productDetail.html?id=${producto.id}`;
+        }
       });
+    }
+
+    // Click en botón → agregar al carrito (solo si no es admin)
+    if (!esAdmin) {
+      card
+        .querySelector<HTMLButtonElement>(".btn")
+        ?.addEventListener("click", (e) => {
+          e.stopPropagation();
+          agregarAlCarrito(producto);
+        });
+    }
   });
 };
 

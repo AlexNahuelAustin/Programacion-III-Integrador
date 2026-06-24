@@ -22,6 +22,12 @@ formulario?.addEventListener("submit", (event: Event) => {
     return;
   }
 
+  if (password.length < 6) {
+    mensaje.textContent = "La contraseña debe tener al menos 6 caracteres";
+    mensaje.style.color = "red";
+    return;
+  }
+
   // Crear objeto usuario nuevo
   const nuevoUsuario: IUser = {
     id: Date.now(),
@@ -48,11 +54,18 @@ formulario?.addEventListener("submit", (event: Event) => {
   // Guardar nuevo usuario
   users.push(nuevoUsuario);
   localStorage.setItem("Users", JSON.stringify(users));
-  mensaje.textContent = "Registro exitoso. Redirigiendo a login...";
-  mensaje.style.color = "green";
 
-  // Redirigir a login después de 2 segundos
-  setTimeout(() => {
-    navigate("/src/pages/auth/login/login.html");
-  }, 2000);
+  // Auto-login: guardar sesión igual que lo hace login.ts
+  const sesion: IUser = {
+    id: nuevoUsuario.id,
+    nombre: nuevoUsuario.nombre,
+    apellido: nuevoUsuario.apellido,
+    mail: nuevoUsuario.mail,
+    celular: nuevoUsuario.celular,
+    rol: nuevoUsuario.rol,
+  };
+  localStorage.setItem("userData", JSON.stringify(sesion));
+  localStorage.removeItem("carrito");
+
+  navigate("/src/pages/store/home/home.html");
 });

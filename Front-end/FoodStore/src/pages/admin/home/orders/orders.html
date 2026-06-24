@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="/assets/imagen/FoodStore.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodStore - Pedidos</title>
     <link rel="stylesheet" href="../../../../style.css">
@@ -75,6 +76,15 @@
             </nav>
         </div>
     </footer>
+
+    <!-- Modal detalle pedido -->
+    <div id="modal-pedido" class="modal" style="display:none;">
+        <div class="modal-content modal-pedido-content">
+            <span class="close" id="cerrar-modal-pedido">&times;</span>
+            <h2 id="modal-pedido-titulo" class="modal-pedido-titulo"></h2>
+            <div id="modal-pedido-info"></div>
+        </div>
+    </div>
 
     <script type="module" src="./orders.ts"></script>
 </body>
