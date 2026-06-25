@@ -41,10 +41,17 @@ public abstract class BaseRepository<T extends Base> {
             }
             tx.commit();
             return resultado;
-        } catch (RuntimeException e) {
+        } catch (PersistenceException pe) {
             if (tx.isActive()) {
                 tx.rollback();
             }
+            System.err.println("Error de persistencia al guardar: " + pe.getMessage());
+            throw pe;
+        }catch (RuntimeException e){
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            System.err.println("Error inesperado: " + e.getMessage());
             throw e;
         } finally {
             em.close();
@@ -76,6 +83,9 @@ public abstract class BaseRepository<T extends Base> {
             String jpql = "SELECT e FROM " + getEntityClass().getSimpleName()
                     + " e WHERE e.eliminado = false";
             return em.createQuery(jpql, entityClass).getResultList();
+        }catch (PersistenceException pe) {
+            System.err.println("Error al listar activos: " + pe.getMessage());
+            return List.of();
         } finally {
             em.close();
         }
@@ -99,10 +109,17 @@ public abstract class BaseRepository<T extends Base> {
             em.merge(entity);
             tx.commit();
             return true;
-        } catch (RuntimeException e) {
+        } catch (PersistenceException pe) {
             if (tx.isActive()) {
                 tx.rollback();
             }
+            System.err.println("Error de persistencia al eliminar: " + pe.getMessage());
+            throw pe;
+        }catch (RuntimeException e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            System.err.println("Error inesperado al eliminar: " + e.getMessage());
             throw e;
         } finally {
             em.close();
