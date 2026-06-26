@@ -5,10 +5,14 @@ import com.tp.jpa.exceptions.StockInsuficienteException;
 import com.tp.jpa.init.DataLoader;
 import com.tp.jpa.model.Categoria;
 import com.tp.jpa.model.Producto;
+import com.tp.jpa.model.Usuario;
 import com.tp.jpa.model.dtos.CategoriaDTO;
 import com.tp.jpa.model.dtos.ProductoDTO;
+import com.tp.jpa.model.dtos.UsuarioDTO;
+import com.tp.jpa.model.enums.Rol;
 import com.tp.jpa.repository.CategoriaRepository;
 import com.tp.jpa.repository.ProductoRepository;
+import com.tp.jpa.repository.UsuarioRepository;
 import com.tp.jpa.util.JPAUtil;
 
 import java.util.List;
@@ -20,14 +24,17 @@ import java.util.Scanner;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
 
+    static UsuarioRepository usuarioRepository = new UsuarioRepository();
     static CategoriaRepository categoriaRepository = new CategoriaRepository();
     static ProductoRepository productoRepository = new ProductoRepository();
     static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) {
         DataLoader.cargarDatos(categoriaRepository, productoRepository);
         menuPrincipal();
         JPAUtil.close();
     }
+
     private static void menuPrincipal() {
         boolean salir = false;
         while (!salir) {
@@ -39,7 +46,8 @@ public class Main {
             System.out.println("==========================\n");
             System.out.println("  1. Gestion de Categorias");
             System.out.println("  2. Gestion de Productos");
-            System.out.println("  3. Reportes");
+            System.out.println("  3. Gestion de Usuarios");
+            System.out.println("  5. Reportes");
             System.out.println("  0. Salir");
             System.out.println("----------------------------");
             System.out.print("Seleccione una opcion: ");
@@ -49,7 +57,8 @@ public class Main {
                 switch (opcion) {
                     case 1 -> subMenuCategoria();
                     case 2 -> subMenuProducto();
-                    case 3 -> subMenuReportes();
+                    case 3 -> subMenuUsuario();
+                    case 4 -> subMenuReportes();
                     case 0 -> salir = true;
                     default -> System.err.println("Numero invalido");
                 }
@@ -121,6 +130,38 @@ public class Main {
         }
     }
 
+
+    // Submenu de usuario
+    public static void subMenuUsuario() {
+        boolean salir = false;
+        while (!salir) {
+            try {
+                System.out.println("\n--- Submenu: Productos ---");
+                System.out.println("1. Alta de usuario");
+                System.out.println("2. Modificar usuario");
+                System.out.println("3. Baja logica de producto");
+                System.out.println("4. Listar usuarios activas");
+                System.out.println("0. Volver al menu principal");
+                System.out.println("------------------------------");
+                System.out.print("Opcion: ");
+                int opcion = Integer.parseInt(scanner.nextLine());
+                switch (opcion) {
+                    case 1 -> altaUsuario();
+                    case 2 -> modificarUsuario();
+                    case 3 -> bajaLogicaUsuario();
+                    case 4 -> buscarUsuarioPorMail();
+                    case 5 -> salir = true;
+                    default -> System.out.println("Error: numero invalido");
+                }
+            } catch (NumberFormatException nfe) {
+                System.err.println("Error ingrese un numero valido" + nfe.getMessage());
+            } catch (Exception e) {
+                System.err.println("Error al ingresar una opcion!" + e.getMessage());
+            }
+        }
+    }
+
+
     // Submenu de reportes
     public static void subMenuReportes() {
         boolean salir = false;
@@ -154,7 +195,7 @@ public class Main {
             System.out.print("Nombre: ");
             String nombre = scanner.nextLine();
             if (nombre.isBlank()) {
-                System.out.print("El nombre no puede estar vacio");
+                System.err.print("Error: El nombre no puede estar vacio");
                 return;
             }
             System.out.print("Descripcion: ");
@@ -177,11 +218,12 @@ public class Main {
     public static void modificarCategoria() {
         listarCategorias();
         try {
-            System.out.print("\nIngresa el ID a modificar: ");
+            System.out.print("\nIngresa el ID de la categoria a modificar: ");
             Long idABuscar = Long.parseLong(scanner.nextLine());
             categoriaRepository.buscarPorId(idABuscar)
                     .ifPresentOrElse(categoria -> {
                         CategoriaDTO categoriaDTO = CategoriaDTO.fromEntidad(categoria);
+                        System.out.println("\n---------- Datos Actuales ----------");
                         System.out.println("Nombre actual: " + categoriaDTO.nombre());
                         System.out.println("Descripcion actual: " + categoriaDTO.descripcion());
 
@@ -256,11 +298,10 @@ public class Main {
         System.out.println("--- Categorias activas ---");
         System.out.printf("%-10s %-20s %20s%n", "ID", "Nombre", "Descripcion");
         System.out.println("-".repeat(85));
-        categorias.forEach(categoria -> {
-            CategoriaDTO categoriaDTO = CategoriaDTO.fromEntidad(categoria);
-            System.out.printf("%-10s %-20s %-30s%n",
-                    categoriaDTO.id(), categoriaDTO.nombre(), categoriaDTO.descripcion());
-        });
+        categorias.stream().map(CategoriaDTO::fromEntidad)
+                .forEach(categoriaDTO ->
+                        System.out.printf("%-10s %-20s %-30s%n",
+                                categoriaDTO.id(), categoriaDTO.nombre(), categoriaDTO.descripcion()));
 
     }
 
@@ -343,6 +384,7 @@ public class Main {
             productoRepository.buscarPorId(idABuscar)
                     .ifPresentOrElse(producto -> {
                         ProductoDTO productoDTO = ProductoDTO.fromEntidad(producto);
+                        System.out.println("\n---------- Datos Actuales ----------");
                         System.out.println("Nombre actual: " + productoDTO.nombre());
                         System.out.println("Descripcion actual: " + productoDTO.descripcion());
                         System.out.println("precio actual: " + productoDTO.precio());
@@ -377,6 +419,7 @@ public class Main {
                             producto.setStock(nuevoStock);
                         }
 
+                        // Guardar Cambios
                         productoRepository.guardar(producto);
                         System.out.println("Producto modificado con exito!");
                     }, () -> System.err.println("Producto no encontrado o ya dado de baja"));
@@ -406,7 +449,8 @@ public class Main {
                         Map<String, Runnable> acciones = Map.of(
                                 "si", () -> {
                                     productoRepository.eliminarLogico(producto.getId());
-                                    System.out.println("Producto " + productoDTO.nombre() + " eliminado!");
+                                    System.out.println("Producto " + productoDTO.nombre() +
+                                            " eliminado!");
                                 },
                                 "no", () -> System.out.println("Operacion cancelada")
                         );
@@ -417,9 +461,9 @@ public class Main {
 
                     }, () -> System.out.println("Producto no encontrado o ya dado de baja"));
         } catch (NumberFormatException nfe) {
-            System.err.println("Error ingrese un  valido");
+            System.err.println("Error ingrese un numero ");
         } catch (Exception e) {
-            System.err.println("Error al modificar una producto: " + e.getMessage());
+            System.err.println("Error al eliminar una producto: " + e.getMessage());
         }
 
 
@@ -431,17 +475,239 @@ public class Main {
         System.out.printf("%-5s %-30s %-20s %-10s %-10s%n",
                 "ID", "Nombre", "Categoria", "Stock", "Precio");
         System.out.println("-".repeat(85));
-        productos.forEach(producto -> {
-            ProductoDTO productoDTO = ProductoDTO.fromEntidad(producto);
-            System.out.printf("%-5s %-30s %-20s %-10s %-10.2f%n",
-                    productoDTO.id(),
-                    productoDTO.nombre(),
-                    productoDTO.categoriaNombre(),
-                    productoDTO.stock(),
-                    productoDTO.precio());
-        });
+        productos.stream()
+                .map(ProductoDTO::fromEntidad)
+                .forEach(productoDTO ->
+                        System.out.printf("%-5s %-30s %-20s %-10s %-10.2f%n",
+                                productoDTO.id(),
+                                productoDTO.nombre(),
+                                productoDTO.categoriaNombre(),
+                                productoDTO.stock(),
+                                productoDTO.precio()));
     }
 
+
+    // Metodos del sub menu usuario
+    public static void altaUsuario() {
+        try {
+            // Ingresar nombre del usuario
+            System.out.print("\nIngrese su nombre: ");
+            String nombre = scanner.nextLine();
+            if (nombre.isBlank()) {
+                System.out.print("El nombre no puede estar vacio");
+                return;
+            }
+            System.out.print("Ingrese su apellido: ");
+            String apellido = scanner.nextLine();
+            if (apellido.isBlank()) {
+                System.out.print("El apellido no puede estar vacio");
+                return;
+            }
+            System.out.print("Ingrese su celular(opcional, Enter para omitir): ");
+            String celular = scanner.nextLine();
+            if (celular.isBlank()) {
+                celular = null;
+            }
+
+            System.out.print("Ingrese su Email: ");
+            String mail = scanner.nextLine();
+            // Validar que el mail no esté en uso
+            if (usuarioRepository.buscarPorMail(mail).isPresent()) {
+                System.err.println("Error: El mail ya está registrado");
+                return;
+            }
+            System.out.print("Ingrese su contraseña: ");
+            String contraseña = scanner.nextLine();
+
+            System.out.println("Ingrese su ROL");
+            System.out.println("1. ADMIN");
+            System.out.println("2. USUARIO");
+            System.out.print("Opcion: ");
+            int rolOpcion = Integer.parseInt(scanner.nextLine());
+
+            Rol rol;
+            switch (rolOpcion) {
+                case 1 -> rol = Rol.ADMIN;
+                case 2 -> rol = Rol.USUARIO;
+                default -> {
+                    System.err.println("Error: Opción inválida");
+                    return;
+                }
+            }
+
+            // Crear Usuario y guardar
+            Usuario usuarioNuevo = Usuario.builder()
+                    .nombre(nombre)
+                    .apellido(apellido)
+                    .mail(mail)
+                    .celular(celular)
+                    .contraseña(contraseña)
+                    .rol(rol)
+                    .build();
+
+            Usuario usuarioGuardar = usuarioRepository.guardar(usuarioNuevo);
+            UsuarioDTO usuarioDTO = UsuarioDTO.fromEntidad(usuarioGuardar);
+            System.out.println("Usuario guardado con exito!");
+            System.out.println("ID: " + usuarioDTO.id());
+        } catch (NumberFormatException nfe) {
+            System.err.println("Error: ingrese un número válido");
+        } catch (Exception e) {
+            System.err.println("Error al crear usuario: " + e.getMessage());
+        }
+    }
+
+    public static void modificarUsuario() {
+        // listarUsuario()
+        try {
+            System.out.print("Ingrese el ID del producto a modificar: ");
+            Long idABuscar = Long.parseLong(scanner.nextLine());
+            usuarioRepository.buscarPorId(idABuscar)
+                    .ifPresentOrElse(usuario -> {
+                        UsuarioDTO usuarioDTO = UsuarioDTO.fromEntidad(usuario);
+                        // Mostramos datos actuales
+                        System.out.println("\n---------- Datos Actuales ----------");
+                        System.out.println("Nombre:" + usuarioDTO.nombre());
+                        System.out.println("Apellido: " + usuarioDTO.apellido());
+                        System.out.println("Celular: " + usuarioDTO.celular());
+                        System.out.println("Email:" + usuarioDTO.mail());
+                        System.out.println("Contraseña actual: ***");
+
+                        // Modificar nombre
+                        System.out.print("Nuevo nombre (Enter para mantener): ");
+                        String nombreNuevo = scanner.nextLine();
+                        if (!nombreNuevo.isBlank()) usuario.setNombre(nombreNuevo);
+
+                        // Modificar apellido
+                        System.out.print("Nuevo Apellido (Enter para mantener): ");
+                        String apellidoNuevo = scanner.nextLine();
+                        if (!apellidoNuevo.isBlank()) usuario.setApellido(apellidoNuevo);
+
+                        // Modificar celular
+                        System.out.print("Nuevo celular (Enter para mantener): ");
+                        String celularNuevo = scanner.nextLine();
+                        if (!celularNuevo.isBlank()) {
+                            if (!celularNuevo.matches("//d+")) {
+                                System.err.println("Error: El celular debe contener solo números");
+                                return;
+                            }
+                            usuario.setCelular(celularNuevo);
+                        }
+
+                        // Modificar email
+                        System.out.print("Nuevo Email (Enter para mantener): ");
+                        String nuevoMail = scanner.nextLine();
+                        if (!nuevoMail.isBlank()) {
+                            usuarioRepository.buscarPorMail(nuevoMail).ifPresent(usuarioExistente -> {
+                                if (!usuarioExistente.getId().equals(usuario.getId())) {
+                                    System.err.println("Error: El mail ya está registrado");
+                                    return;
+                                }
+                            });
+                            usuario.setMail(nuevoMail);
+                        }
+
+                        // Modificar contraseña
+                        System.out.print("Nueva constraseña (Enter para mantener): ");
+                        String nuevaContraseña = scanner.nextLine();
+                        if (!nuevaContraseña.isBlank()) usuario.setContraseña(nuevaContraseña);
+
+                        // Guardar Cambio
+                        usuarioRepository.guardar(usuario);
+                        System.out.println("Usuario modificado con exito!");
+                    }, () -> System.err.println("Usuario no encontrado o ya dado de baja"));
+
+        } catch (NumberFormatException nfe) {
+            System.err.println("Error ingrese un numero valido");
+        } catch (Exception e) {
+            System.err.println("Error al modificar un producto: " + e.getMessage());
+        }
+
+    }
+
+    public static void bajaLogicaUsuario() {
+        // listarUsuario()
+        System.out.print("Ingresa el ID del usuario  a eliminar: ");
+        try {
+            Long idBuscar = Long.parseLong(scanner.nextLine());
+            usuarioRepository.buscarPorId(idBuscar)
+                    .ifPresentOrElse(usuario -> {
+                        UsuarioDTO usuarioDTO = UsuarioDTO.fromEntidad(usuario);
+                        System.out.println("-------------------------------");
+                        System.out.println("Nombre: " + usuarioDTO.nombre());
+                        System.out.println("Apellido: " + usuarioDTO.apellido());
+                        System.out.println("-------------------------------");
+                        System.out.print("Ingrese 'si' para confirmar o 'no' para cancelar: ");
+                        String opcion = scanner.nextLine();
+                        Map<String, Runnable> accion = Map.of(
+                                "si", () -> {
+                                    usuarioRepository.eliminarLogico(usuario.getId());
+                                    System.out.println("Nombre: " + usuarioDTO.nombre() +
+                                            " Apellido: " + usuarioDTO.apellido() +
+                                            " Eliminado con exito");
+                                },
+                                "no", () -> System.out.println("Operacion cancelada")
+                        );
+                        Optional.ofNullable(accion.get(opcion.toLowerCase()))
+                                .ifPresentOrElse(Runnable::run,
+                                        () -> System.out.println("Opcion invalida")
+                                );
+
+
+                    }, () -> System.out.println("usuario no encontrado o ya dado de baja"));
+        } catch (NumberFormatException nfe) {
+            System.err.println("Error ingrese un numero ");
+        } catch (Exception e) {
+            System.err.println("Error al eliminar una usuario: " + e.getMessage());
+        }
+
+
+    }
+
+    public static void listarUsuarios() {
+        List<Usuario> usuarios = usuarioRepository.listarActivos();
+        System.out.println("Usuarios activos");
+        System.out.printf("%-5s %-15s %-15s %-30s %-10s%n",
+                "ID", "Nombre", "Apellido", "Email", "Rol");
+        System.out.println("-".repeat(85));
+        usuarios.stream()
+                .map(UsuarioDTO::fromEntidad)
+                .forEach(usuarioDTO ->
+                        System.out.printf("%-5s %-15s %-15s %-30s %-10s%n",
+                                usuarioDTO.id(),
+                                usuarioDTO.nombre(),
+                                usuarioDTO.apellido(),
+                                usuarioDTO.mail(),
+                                usuarioDTO.rol()
+                        )
+                );
+    }
+
+    public static void buscarUsuarioPorMail() {
+        System.out.print("Ingrese el email a buscar: ");
+        try {
+            String mailABuscar = scanner.nextLine();
+            if (mailABuscar.isBlank()) {
+                System.err.println("Error: El email no puede estar vacío");
+                return;
+            }
+            if (!mailABuscar.contains("@")) {
+                System.err.println("Error: Email inválido (debe contener @)");
+                return;
+            }
+            usuarioRepository.buscarPorMail(mailABuscar)
+                    .ifPresentOrElse(usuario -> {
+                        UsuarioDTO usuarioDTO = UsuarioDTO.fromEntidad(usuario);
+                        System.out.println("\n--- Usuario encontrado ---");
+                        System.out.println("ID: " + usuarioDTO.id());
+                        System.out.println("Nombre: " + usuarioDTO.nombre());
+                        System.out.println("Apellido: " + usuarioDTO.apellido());
+                        System.out.println("Mail: " + usuarioDTO.mail());
+                        System.out.println("Rol: " + usuarioDTO.rol());
+                    }, () -> System.out.println("Usuario no encontrado"));
+        } catch (Exception e) {
+            System.err.println("Error al buscar usuario: " + e.getMessage());
+        }
+    }
 
     // Metodos del sub menu reportes
     public static void mostrarProductosPorCategoria() {
@@ -455,7 +721,7 @@ public class Main {
                 return;
             }
             System.out.printf("%-5s %-20s  %-10s %-10s%n",
-                    "ID", "Nombre", "Stock", "Precio" );
+                    "ID", "Nombre", "Stock", "Precio");
             System.out.println("-".repeat(65));
             productos.stream()
                     .map(ProductoDTO::fromEntidad)
@@ -469,4 +735,5 @@ public class Main {
 
         }
     }
+
 }

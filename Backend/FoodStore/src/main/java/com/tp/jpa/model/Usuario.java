@@ -26,7 +26,7 @@ public class Usuario extends Base {
     private String apellido;
     @Column(nullable = false, length = 250)
     private String mail;
-    @Column(nullable = false, length = 25)
+    @Column(nullable = true, length = 25)
     private String celular;
     @Column(nullable = false)
     private String contraseña;
