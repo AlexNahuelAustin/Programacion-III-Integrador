@@ -4,22 +4,23 @@ import com.tp.jpa.exceptions.PrecioNoValidoException;
 import com.tp.jpa.exceptions.StockInsuficienteException;
 import com.tp.jpa.init.DataLoader;
 import com.tp.jpa.model.Categoria;
+import com.tp.jpa.model.Pedido;
 import com.tp.jpa.model.Producto;
 import com.tp.jpa.model.Usuario;
-import com.tp.jpa.model.dtos.CategoriaDTO;
-import com.tp.jpa.model.dtos.ProductoDTO;
-import com.tp.jpa.model.dtos.UsuarioDTO;
+import com.tp.jpa.model.dtos.*;
+import com.tp.jpa.model.enums.Estado;
 import com.tp.jpa.model.enums.FormaPago;
 import com.tp.jpa.model.enums.Rol;
 import com.tp.jpa.repository.CategoriaRepository;
 import com.tp.jpa.repository.ProductoRepository;
 import com.tp.jpa.repository.UsuarioRepository;
 import com.tp.jpa.util.JPAUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.EntityTransaction;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Scanner;
+import java.time.LocalDate;
+import java.util.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -708,6 +709,7 @@ public class Main {
         }
     }
 
+    // Metodos del sub menu pedido
     public static void altaPedido() {
         // Listar
         List<Usuario> usuarios = usuarioRepository.listarActivos()
@@ -761,7 +763,135 @@ public class Main {
             };
             System.out.println("Forma de pago: " + formaDePago);
 
+            // Listar productos
+            List<Map<String, Object>> items = new ArrayList<>();
+            boolean[] agregarMas = new boolean[]{true};
+            while (agregarMas[0]) {
 
+                listarProductos();
+                System.out.print("Ingrese el ID del producto(0 para terminar): ");
+                Long idProducto = Long.parseLong(scanner.nextLine());
+                if (idProducto == 0) {
+                    agregarMas[0] = false;
+                    continue;
+                }
+
+                productoRepository.buscarPorId(idProducto)
+                        .ifPresentOrElse(producto -> {
+                            ProductoDTO productoDTO = ProductoDTO.fromEntidad(producto);
+                            if (!producto.isDisponible()) {
+                                System.out.println("producto no disponible: " + productoDTO.nombre());
+                                return;
+                            }
+                            System.out.println("Producto seleccionado: " + productoDTO.nombre());
+                            System.out.print("Ingrese la cantidad: ");
+                            int cantidadProducto = Integer.parseInt(scanner.nextLine());
+                            if (cantidadProducto <= 0) {
+                                System.err.println("Error: Cantidad debe ser mayor a 0");
+                                return;
+                            }
+                            if (productoDTO.stock() < cantidadProducto) {
+                                System.err.println("Error: Stock insuficiente. Disponible: " + producto.getStock());
+                                return;
+                            }
+                            Map<String, Object> item = new HashMap<>();
+                            item.put("productoId", idProducto);
+                            item.put("cantidad", cantidadProducto);
+                            items.add(item);
+                            System.out.println("Producto agregado");
+
+                            boolean respuestaValida = false;
+                            while (!respuestaValida) {
+                                System.out.print("¿Agregar otro producto?: ");
+                                String respuesta = scanner.nextLine().toLowerCase();
+                                if (respuesta.equals("si")) {
+                                    respuestaValida = true;
+                                } else if (respuesta.equals("no")) {
+                                    agregarMas[0] = false;
+                                    respuestaValida = true;
+                                } else {
+                                    System.err.println("Error: Respuesta inválida, ingrese 'si' o 'no'");
+                                }
+                            }
+
+                        }, () -> System.out.println("Error: Producto no encontrado"));
+
+            }
+
+            if (items.isEmpty()) {
+                System.out.println("El pedido debe tener al menos un producto");
+                return;
+            }
+            System.out.println("\n--- Resumen de productos ---");
+            System.out.printf("%-15s %-15s%n",
+                    "Producto ID", "Cantidad");
+            System.out.println("-".repeat(40));
+            items.forEach(i ->
+                    System.out.printf("%-15s %-15s%n",
+                            i.get("productoId"),
+                            i.get("cantidad"))
+            );
+
+
+            // Transaccion atomica unica
+            EntityManagerFactory emf = JPAUtil.getEntityManagerFactory();
+            EntityManager em = emf.createEntityManager();
+            EntityTransaction tx = em.getTransaction();
+
+            try {
+                tx.begin();
+                Pedido pedido = Pedido.builder()
+                        .fecha(LocalDate.now())
+                        .usuario(usuarioSeleccionado)
+                        .estado(Estado.PENDIENTE)
+                        .formaPago(formaDePago)
+                        .build();
+
+                items.forEach(i -> {
+                    Long productosId = (Long) i.get("productoId");
+                    int cantidad = (int) i.get("cantidad");
+
+                    Producto productoAgregar = em.find(Producto.class, productosId);
+                    pedido.addDetallePedido(cantidad,productoAgregar);
+
+                    productoAgregar.setStock(productoAgregar.getStock()-cantidad);
+                });
+
+                pedido.calcularTotal();
+                em.persist(pedido);
+                tx.commit();
+
+                // Mostrar pedido
+                System.out.println("\n--- Pedido creado con éxito ---");
+                PedidoDTO pedidoDTO = PedidoDTO.fromEntidad(pedido);
+                System.out.println("ID: " + pedidoDTO.id());
+                System.out.println("Fecha: "+ pedidoDTO.fecha());
+                System.out.println("Usuario: " + usuarioDTO.nombre() + " " + usuarioDTO.apellido());
+
+                System.out.println("\n--- Detalle del pedido ---");
+                System.out.printf("%-10s %-20s %-10s %-10s%n",
+                        "Cantidad","Productos","Precio","Subtotal");
+                System.out.println("-".repeat(65));
+
+                // iteramos detalles del pedido
+                pedido.getDetalles().stream()
+                        .map(DetallePedidoDTO::fromEntidad)
+                        .forEach(detallePedidoDTO ->
+                                System.out.printf("%-10d %-20s %-10.2f %-10.2f%n",
+                                        detallePedidoDTO.cantidad(),
+                                        detallePedidoDTO.productoNombre(),
+                                        detallePedidoDTO.productoPrecio(),
+                                        detallePedidoDTO.subtotal()
+                                ));
+
+                System.out.println("-".repeat(65));
+                System.out.println("Total: $" + String.format("%.2f", pedidoDTO.total()));
+            }catch (RuntimeException re){
+                if (tx.isActive())tx.rollback();
+                System.err.println("Error: " + re.getMessage());
+            }finally {
+                em.close();
+            }
         } catch (NumberFormatException nfe) {
             System.err.println("Error: ID debe ser número");
             return;
