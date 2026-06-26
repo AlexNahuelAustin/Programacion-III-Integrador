@@ -9,6 +9,7 @@ import com.tp.jpa.model.Usuario;
 import com.tp.jpa.model.dtos.CategoriaDTO;
 import com.tp.jpa.model.dtos.ProductoDTO;
 import com.tp.jpa.model.dtos.UsuarioDTO;
+import com.tp.jpa.model.enums.FormaPago;
 import com.tp.jpa.model.enums.Rol;
 import com.tp.jpa.repository.CategoriaRepository;
 import com.tp.jpa.repository.ProductoRepository;
@@ -130,7 +131,6 @@ public class Main {
         }
     }
 
-
     // Submenu de usuario
     public static void subMenuUsuario() {
         boolean salir = false;
@@ -160,7 +160,6 @@ public class Main {
             }
         }
     }
-
 
     // Submenu de reportes
     public static void subMenuReportes() {
@@ -557,7 +556,7 @@ public class Main {
     }
 
     public static void modificarUsuario() {
-        // listarUsuario()
+        listarUsuarios();
         try {
             System.out.print("Ingrese el ID del producto a modificar: ");
             Long idABuscar = Long.parseLong(scanner.nextLine());
@@ -625,7 +624,7 @@ public class Main {
     }
 
     public static void bajaLogicaUsuario() {
-        // listarUsuario()
+        listarUsuarios();
         System.out.print("Ingresa el ID del usuario  a eliminar: ");
         try {
             Long idBuscar = Long.parseLong(scanner.nextLine());
@@ -707,6 +706,71 @@ public class Main {
         } catch (Exception e) {
             System.err.println("Error al buscar usuario: " + e.getMessage());
         }
+    }
+
+    public static void altaPedido() {
+        // Listar
+        List<Usuario> usuarios = usuarioRepository.listarActivos()
+                .stream()
+                .filter(usuario -> usuario.getRol() == Rol.USUARIO)
+                .toList();
+
+        if (usuarios.isEmpty()) {
+            System.out.println("No hay usuarios activos");
+            return;
+        }
+
+        // Mostrar usuarios
+        System.out.println("\n--- Usuarios disponibles ---");
+        System.out.printf("%-5s %-15s %-15s%n",
+                "ID", "Nombre", "Apellido");
+        System.out.println("-".repeat(85));
+        usuarios.stream()
+                .map(UsuarioDTO::fromEntidad)
+                .forEach(usuarioDTO ->
+                        System.out.printf("%-5s %-15s %-15s%n",
+                                usuarioDTO.id(),
+                                usuarioDTO.nombre(),
+                                usuarioDTO.apellido())
+                );
+
+        // Seleccionar usuario
+        System.out.println("-".repeat(65));
+        System.out.print("Ingrese el id del usuario: ");
+        try {
+            Long usuarioId = Long.parseLong(scanner.nextLine());
+            Usuario usuarioSeleccionado = usuarioRepository.buscarPorId(usuarioId)
+                    .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+            UsuarioDTO usuarioDTO = UsuarioDTO.fromEntidad(usuarioSeleccionado);
+            System.out.println("Usuario seleccionado: " + usuarioDTO.nombre()
+                    + " " + usuarioDTO.apellido());
+
+            // Forma de pago
+            System.out.println("\nForma de pago:");
+            System.out.println("1. TARJETA");
+            System.out.println("2. TRANSFERENCIA");
+            System.out.println("3. EFECTIVO");
+            System.out.print("Opción: ");
+
+            int opcion = Integer.parseInt(scanner.nextLine());
+            FormaPago formaDePago = switch (opcion) {
+                case 1 -> FormaPago.TARJETA;
+                case 2 -> FormaPago.TRANSFERENCIA;
+                case 3 -> FormaPago.EFECTIVO;
+                default -> throw new IllegalArgumentException("Opcion invalida");
+            };
+            System.out.println("Forma de pago: " + formaDePago);
+
+
+        } catch (NumberFormatException nfe) {
+            System.err.println("Error: ID debe ser número");
+            return;
+        } catch (IllegalArgumentException iae) {
+            System.err.println("Error: " + iae.getMessage());
+            return;
+        }
+
+
     }
 
     // Metodos del sub menu reportes
