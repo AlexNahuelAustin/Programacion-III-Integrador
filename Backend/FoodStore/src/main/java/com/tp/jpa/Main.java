@@ -42,17 +42,19 @@ public class Main {
     private static void menuPrincipal() {
         boolean salir = false;
         while (!salir) {
+            System.out.println();
             System.out.println("\n+================================+");
             System.out.println("|   Gestion de pedidos - JPA    |");
             System.out.println("+================================+");
             System.out.println("\n==========================");
             System.out.println("        Menu Principal");
             System.out.println("==========================\n");
-            System.out.println("  1. Gestion de Categorias");
-            System.out.println("  2. Gestion de Productos");
-            System.out.println("  3. Gestion de Usuarios");
-            System.out.println("  5. Reportes");
-            System.out.println("  0. Salir");
+            System.out.println("1. Gestionar Categorías");
+            System.out.println("2. Gestionar Productos");
+            System.out.println("3. Gestionar Usuarios");
+            System.out.println("4. Gestionar Pedidos");
+            System.out.println("5. Reportes");
+            System.out.println("0. Salir");
             System.out.println("----------------------------");
             System.out.print("Seleccione una opcion: ");
             try {
@@ -62,7 +64,8 @@ public class Main {
                     case 1 -> subMenuCategoria();
                     case 2 -> subMenuProducto();
                     case 3 -> subMenuUsuario();
-                    case 4 -> subMenuReportes();
+                    case 4 -> subMenuPedido();
+                    case 5 -> subMenuReportes();
                     case 0 -> salir = true;
                     default -> System.err.println("Numero invalido");
                 }
@@ -153,7 +156,41 @@ public class Main {
                     case 2 -> modificarUsuario();
                     case 3 -> bajaLogicaUsuario();
                     case 4 -> buscarUsuarioPorMail();
-                    case 5 -> salir = true;
+                    case 0 -> salir = true;
+                    default -> System.out.println("Error: numero invalido");
+                }
+            } catch (NumberFormatException nfe) {
+                System.err.println("Error ingrese un numero valido" + nfe.getMessage());
+            } catch (Exception e) {
+                System.err.println("Error al ingresar una opcion!" + e.getMessage());
+            }
+        }
+    }
+
+    // Submenu de pedidos
+    public static void subMenuPedido() {
+        boolean salir = false;
+        while (!salir) {
+            try {
+                System.out.println("\n--- Submenu: Pedido ---");
+                System.out.println("1. Alta de pedido");
+                System.out.println("2. cambiar estado de pedido");
+                System.out.println("3. Baja logica de pedido");
+                System.out.println("4. Listar pedidos activas");
+                System.out.println("5. Pedidos por usuario");
+                System.out.println("6. Pedidos por estado");
+                System.out.println("0. Volver al menu principal");
+                System.out.println("------------------------------");
+                System.out.print("Opcion: ");
+                int opcion = Integer.parseInt(scanner.nextLine());
+                switch (opcion) {
+                    case 1 -> altaPedido();
+                    case 2 -> cambiarEstado();
+                    case 3 -> bajaLogicaPedido();
+                    case 4 -> listarPedidos();
+                    case 5 -> pedidoPorUsuario();
+                    case 6 -> pedidoPorEstado();
+                    case 0 -> salir = true;
                     default -> System.out.println("Error: numero invalido");
                 }
             } catch (NumberFormatException nfe) {
@@ -362,8 +399,8 @@ public class Main {
                     .stock(stock)
                     .imagen("Imagen.png")
                     .disponible(true)
-                    .categoria(categoria)
                     .build();
+            categoria.agregarProductos(productoNuevo);
 
             Producto guardado = productoRepository.guardar(productoNuevo);
             ProductoDTO productoDTO = ProductoDTO.fromEntidad(guardado);
@@ -658,7 +695,7 @@ public class Main {
 
                     }, () -> System.out.println("usuario no encontrado o ya dado de baja"));
         } catch (NumberFormatException nfe) {
-            System.err.println("Error: ingrese un numero " +nfe.getMessage());
+            System.err.println("Error: ingrese un numero " + nfe.getMessage());
         } catch (Exception e) {
             System.err.println("Error al eliminar un usuario: " + e.getMessage());
         }
@@ -849,10 +886,12 @@ public class Main {
 
                 Pedido pedido = Pedido.builder()
                         .fecha(LocalDate.now())
-                        .usuario(usuarioGestionado)
                         .estado(Estado.PENDIENTE)
                         .formaPago(formaDePago)
                         .build();
+
+                // Agregar pedido al usuario
+                usuarioGestionado.addPedido(pedido);
 
                 items.forEach(i -> {
                     Long productosId = (Long) i.get("productoId");
@@ -910,7 +949,7 @@ public class Main {
     }
 
     public static void cambiarEstado() {
-         listarPedidos();
+        listarPedidos();
         System.out.print("Ingrese el ID del pedido: ");
         try {
             Long idPedido = Long.parseLong(scanner.nextLine());
@@ -983,38 +1022,112 @@ public class Main {
                                 .ifPresentOrElse(Runnable::run,
                                         () -> System.out.println("Opción invalida")
                                 );
-                    },()-> System.out.println("Pedido no encontrado o ya dado de baja")
+                    }, () -> System.out.println("Pedido no encontrado o ya dado de baja")
             );
 
         } catch (NumberFormatException nfe) {
-            System.err.println("Error: ingrese un numero " +nfe.getMessage());
+            System.err.println("Error: ingrese un numero " + nfe.getMessage());
         } catch (Exception e) {
             System.err.println("Error al eliminar un pedido: " + e.getMessage());
         }
 
     }
 
-    public static void listarPedidos(){
+    public static void listarPedidos() {
         List<Pedido> pedidos = pedidoRepository.listarActivos();
         System.out.println("Pedidos activos");
         System.out.printf("%-5s %-12s %-15s %-20s %-25s %-12s%n"
-        ,"ID","Fecha","Estado","Forma de pago","Nombre(Usuario)","Total");
+                , "ID", "Fecha", "Estado", "Forma de pago", "Nombre(Usuario)", "Total");
         System.out.println("-".repeat(85));
         pedidos.stream()
                 .map(PedidoDTO::fromEntidad)
                 .forEach(pedidoDTO ->
-                                System.out.printf("%-5s %-12s %-15s %-20s %-25s %-12.2f%n",
-                                        pedidoDTO.id(),
-                                        pedidoDTO.fecha(),
-                                        pedidoDTO.estado(),
-                                        pedidoDTO.formaPago(),
-                                        pedidoDTO.nombreUsuario(),
-                                        pedidoDTO.total()
-                                        )
-                        );
+                        System.out.printf("%-5s %-12s %-15s %-20s %-25s %-12.2f%n",
+                                pedidoDTO.id(),
+                                pedidoDTO.fecha(),
+                                pedidoDTO.estado(),
+                                pedidoDTO.formaPago(),
+                                pedidoDTO.nombreUsuario(),
+                                pedidoDTO.total()
+                        )
+                );
 
     }
 
+    public static void pedidoPorUsuario() {
+        listarUsuarios();
+        System.out.print("Ingrese el ID del usuario: ");
+        try {
+            Long idUsuario = Long.parseLong(scanner.nextLine());
+            List<Pedido> pedidos = pedidoRepository.buscarPorUsuario(idUsuario);
+            if (pedidos.isEmpty()) {
+                System.out.println("No hay pedidos para este usuario");
+            }
+            System.out.println("\n --- Pedidos del usuario ---");
+            System.out.printf("%-5s %-12s %-15s %-25s %-15s%n",
+                    "ID", "Fecha", "Estado", "Forma de pago", "Total");
+            System.out.println("-".repeat(65));
+
+            pedidos.stream()
+                    .map(PedidoDTO::fromEntidad)
+                    .forEach(
+                            pedidoDTO -> System.out.printf(
+                                    "%-5s %-12s %-15s %-20s %-12.2f%n",
+                                    pedidoDTO.id(),
+                                    pedidoDTO.fecha(),
+                                    pedidoDTO.estado(),
+                                    pedidoDTO.formaPago(),
+                                    pedidoDTO.total()
+
+                            )
+                    );
+        } catch (NumberFormatException nfe) {
+            System.err.println("Error: Ingrese un número válido");
+        } catch (Exception e) {
+            System.err.println("Error al buscar pedidos: " + e.getMessage());
+        }
+    }
+
+    public static void pedidoPorEstado() {
+        System.out.println("\n Seleccione el estado para filtrar pedidos");
+        System.out.println("\n1.PENDIENTE \n2.CONFIRMADO \n3.TERMINADO \n4.CANCELADO ");
+        System.out.println("-".repeat(40));
+        System.out.print("Opción: ");
+        try {
+            int opcion = Integer.parseInt(scanner.nextLine());
+            Estado estado = switch (opcion) {
+                case 1 -> Estado.PENDIENTE;
+                case 2 -> Estado.CONFIRMADO;
+                case 3 -> Estado.TERMINADO;
+                case 4 -> Estado.CANCELADO;
+                default -> throw new IllegalArgumentException("Error: opcion invalida");
+            };
+            List<Pedido> pedidos = pedidoRepository.buscarPorEstado(estado);
+
+            if (pedidos.isEmpty()) {
+                System.out.println("No hay pedidos con ese estado");
+                return;
+            }
+            System.out.println("\n--- Pedido por estado: " + estado + " ---");
+            pedidos.stream()
+                    .map(PedidoDTO::fromEntidad)
+                    .forEach(pedidoDTO ->
+                            System.out.printf("%-5s %-12s %-25s %-20s %-12.2f%n",
+                                    pedidoDTO.id(),
+                                    pedidoDTO.fecha(),
+                                    pedidoDTO.nombreUsuario(),
+                                    pedidoDTO.formaPago(),
+                                    pedidoDTO.total()));
+        } catch (NumberFormatException nfe) {
+            System.err.println("Error: Ingrese un número válido");
+        } catch (IllegalArgumentException iae) {
+            System.err.println("Error: " + iae.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error al buscar pedidos: " + e.getMessage());
+        }
+
+
+    }
 
     // Metodos del sub menu reportes
     public static void mostrarProductosPorCategoria() {
@@ -1043,4 +1156,15 @@ public class Main {
         }
     }
 
+    public static void totalFacturado(){
+        List<Pedido> pedidos = pedidoRepository.buscarPorEstado(Estado.TERMINADO);
+
+        double totalFacturados = pedidos.stream()
+                .map(PedidoDTO::fromEntidad)
+                .mapToDouble(PedidoDTO::total)
+                .sum();
+
+        System.out.println("\n--- Total Facturado ---");
+        System.out.println("Total facturado: " + String.format(Locale.US,"$%.2f",totalFacturados));
+    }
 }

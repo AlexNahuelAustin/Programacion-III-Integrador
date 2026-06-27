@@ -41,6 +41,7 @@ public class Usuario extends Base {
     // metodo para agregar pedidos
     public void addPedido(Pedido pedido) {
         this.pedidos.add(pedido);
+        pedido.setUsuario(this);
     }
 
     // === Setters modificados ===
