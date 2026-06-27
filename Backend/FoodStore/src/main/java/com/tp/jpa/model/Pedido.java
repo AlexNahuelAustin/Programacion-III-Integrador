@@ -38,7 +38,7 @@ public class Pedido extends Base implements Calculable {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
     @Builder.Default
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "pedido")
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "pedido",fetch = FetchType.EAGER)
     private Set<DetallePedido> detalles = new HashSet<>();
 
 

@@ -18,7 +18,7 @@
         <properties>
             <!-- Configuración JDBC (H2) -->
             <property name="jakarta.persistence.jdbc.url"
-                      value="jdbc:h2:file:./data/anda;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"/>
+                      value="jdbc:h2:file:./data/andaPorfi;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"/>
             <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
             <property name="jakarta.persistence.jdbc.user" value="sa"/>
             <property name="jakarta.persistence.jdbc.password" value=""/>

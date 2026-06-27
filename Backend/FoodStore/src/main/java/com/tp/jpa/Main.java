@@ -34,7 +34,7 @@ public class Main {
     static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        DataLoader.cargarDatos(categoriaRepository, productoRepository);
+        DataLoader.cargarDatos(categoriaRepository, productoRepository, usuarioRepository, pedidoRepository);
         menuPrincipal();
         JPAUtil.close();
     }
@@ -142,11 +142,11 @@ public class Main {
         boolean salir = false;
         while (!salir) {
             try {
-                System.out.println("\n--- Submenu: Productos ---");
+                System.out.println("\n--- Submenu: Usuario ---");
                 System.out.println("1. Alta de usuario");
                 System.out.println("2. Modificar usuario");
-                System.out.println("3. Baja logica de producto");
-                System.out.println("4. Listar usuarios activas");
+                System.out.println("3. Baja logica de usuario");
+                System.out.println("4. Listar usuarios activos");
                 System.out.println("0. Volver al menu principal");
                 System.out.println("------------------------------");
                 System.out.print("Opcion: ");
@@ -155,7 +155,8 @@ public class Main {
                     case 1 -> altaUsuario();
                     case 2 -> modificarUsuario();
                     case 3 -> bajaLogicaUsuario();
-                    case 4 -> buscarUsuarioPorMail();
+                    case 4 -> listarUsuarios();
+                    case 5 -> buscarUsuarioPorMail();
                     case 0 -> salir = true;
                     default -> System.out.println("Error: numero invalido");
                 }
@@ -202,29 +203,33 @@ public class Main {
     }
 
     // Submenu de reportes
-    public static void subMenuReportes() {
+    private static void subMenuReportes() {
         boolean salir = false;
         while (!salir) {
             System.out.println("\n--- Submenu: Reportes ---");
-            System.out.println("1. Productos por categoria (JPQL)");
+            System.out.println("1. Productos por categoria");
+            System.out.println("2. Pedidos por usuario");
+            System.out.println("3. Pedidos por estado");
+            System.out.println("4. Total facturado");
             System.out.println("0. Volver al menu principal");
+            System.out.println("------------------------------");
+            System.out.print("Opcion: ");
             try {
-                System.out.print("Opcion: ");
                 int opcion = Integer.parseInt(scanner.nextLine());
-                if (opcion == 1) {
-                    mostrarProductosPorCategoria();
-                } else if (opcion == 0) {
-                    salir = true;
-                } else {
-                    System.err.println("Opcion invalida");
+                switch (opcion) {
+                    case 1 -> mostrarProductosPorCategoria();
+                    case 2 -> pedidoPorUsuario();
+                    case 3 -> pedidoPorEstado();
+                    case 4 -> totalFacturado();
+                    case 0 -> salir = true;
+                    default -> System.err.println("Error: numero invalido");
                 }
             } catch (NumberFormatException nfe) {
-                System.err.println("Error ingrese un numero valido" + nfe.getMessage());
+                System.err.println("Error: La opcion debe ser un numero");
             } catch (Exception e) {
                 System.err.println("Error al ingresar una opcion!" + e.getMessage());
             }
         }
-
     }
 
 
@@ -751,7 +756,6 @@ public class Main {
 
     // Metodos del sub menu pedido
     public static void altaPedido() {
-        listarPedidos();
         List<Usuario> usuarios = usuarioRepository.listarActivos()
                 .stream()
                 .filter(usuario -> usuario.getRol() == Rol.USUARIO)
@@ -1055,7 +1059,15 @@ public class Main {
     }
 
     public static void pedidoPorUsuario() {
-        listarUsuarios();
+        List<Usuario> usuarios = usuarioRepository.listarActivos()
+                .stream()
+                .filter(usuario -> usuario.getRol() == Rol.USUARIO)  // ← Filtrar solo USUARIO
+                .toList();
+        if (usuarios.isEmpty()) {
+            System.out.println("No hay usuarios activos");
+            return;
+        }
+
         System.out.print("Ingrese el ID del usuario: ");
         try {
             Long idUsuario = Long.parseLong(scanner.nextLine());
@@ -1067,7 +1079,6 @@ public class Main {
             System.out.printf("%-5s %-12s %-15s %-25s %-15s%n",
                     "ID", "Fecha", "Estado", "Forma de pago", "Total");
             System.out.println("-".repeat(65));
-
             pedidos.stream()
                     .map(PedidoDTO::fromEntidad)
                     .forEach(
@@ -1156,7 +1167,7 @@ public class Main {
         }
     }
 
-    public static void totalFacturado(){
+    public static void totalFacturado() {
         List<Pedido> pedidos = pedidoRepository.buscarPorEstado(Estado.TERMINADO);
 
         double totalFacturados = pedidos.stream()
@@ -1165,6 +1176,6 @@ public class Main {
                 .sum();
 
         System.out.println("\n--- Total Facturado ---");
-        System.out.println("Total facturado: " + String.format(Locale.US,"$%.2f",totalFacturados));
+        System.out.println("Total facturado: " + String.format(Locale.US, "$%.2f", totalFacturados));
     }
 }
