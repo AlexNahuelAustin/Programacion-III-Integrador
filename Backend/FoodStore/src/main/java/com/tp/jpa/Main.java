@@ -765,57 +765,58 @@ public class Main {
 
             // Listar productos
             List<Map<String, Object>> items = new ArrayList<>();
-            boolean[] agregarMas = new boolean[]{true};
-            while (agregarMas[0]) {
-
+            boolean agregarMas = true;
+            while (agregarMas) {
                 listarProductos();
-                System.out.print("Ingrese el ID del producto(0 para terminar): ");
+                System.out.print("Ingrese el ID del producto: ");
                 Long idProducto = Long.parseLong(scanner.nextLine());
-                if (idProducto == 0) {
-                    agregarMas[0] = false;
+
+                Optional<Producto> productoOptional = productoRepository.buscarPorId(idProducto);
+
+                if (productoOptional.isEmpty()) {
+                    System.err.println("Error: El producto no existe o está dado de baja.");
+                    continue;
+                }
+                Producto producto = productoOptional.get();
+                ProductoDTO productoDTO = ProductoDTO.fromEntidad(producto);
+
+                if (!producto.isDisponible()){
+                    System.err.println("Error:Producto no disponible " + productoDTO.nombre());
+                    continue;
+                }
+                System.out.println("Producto seleccionado: " + productoDTO.nombre());
+                System.out.print("\nIngrese la cantidad: ");
+                int cantidadProducto = Integer.parseInt(scanner.nextLine());
+
+                if (cantidadProducto <= 0) {
+                    System.err.println("Error: Cantidad debe ser mayor a 0");
                     continue;
                 }
 
-                productoRepository.buscarPorId(idProducto)
-                        .ifPresentOrElse(producto -> {
-                            ProductoDTO productoDTO = ProductoDTO.fromEntidad(producto);
-                            if (!producto.isDisponible()) {
-                                System.out.println("producto no disponible: " + productoDTO.nombre());
-                                return;
-                            }
-                            System.out.println("Producto seleccionado: " + productoDTO.nombre());
-                            System.out.print("Ingrese la cantidad: ");
-                            int cantidadProducto = Integer.parseInt(scanner.nextLine());
-                            if (cantidadProducto <= 0) {
-                                System.err.println("Error: Cantidad debe ser mayor a 0");
-                                return;
-                            }
-                            if (productoDTO.stock() < cantidadProducto) {
-                                System.err.println("Error: Stock insuficiente. Disponible: " + producto.getStock());
-                                return;
-                            }
-                            Map<String, Object> item = new HashMap<>();
-                            item.put("productoId", idProducto);
-                            item.put("cantidad", cantidadProducto);
-                            items.add(item);
-                            System.out.println("Producto agregado");
+                if (producto.getStock() < cantidadProducto) {
+                    System.err.println("Error: Stock insuficiente. Stock disponible: " + producto.getStock());
+                    continue;
+                }
 
-                            boolean respuestaValida = false;
-                            while (!respuestaValida) {
-                                System.out.print("¿Agregar otro producto?: ");
-                                String respuesta = scanner.nextLine().toLowerCase();
-                                if (respuesta.equals("si")) {
-                                    respuestaValida = true;
-                                } else if (respuesta.equals("no")) {
-                                    agregarMas[0] = false;
-                                    respuestaValida = true;
-                                } else {
-                                    System.err.println("Error: Respuesta inválida, ingrese 'si' o 'no'");
-                                }
-                            }
+                Map<String, Object> item = new HashMap<>();
+                item.put("productoId", idProducto);
+                item.put("cantidad", cantidadProducto);
+                items.add(item);
+                System.out.println("Producto agregado.");
 
-                        }, () -> System.out.println("Error: Producto no encontrado"));
-
+                boolean respuestaValida = false;
+                while (!respuestaValida) {
+                    System.out.print("¿Desea agregar otro producto? (si/no): ");
+                    String respuesta = scanner.nextLine().trim().toLowerCase();
+                    if (respuesta.equals("si")) {
+                        respuestaValida = true;
+                    } else if (respuesta.equals("no")) {
+                        agregarMas = false;
+                        respuestaValida = true;
+                    } else {
+                        System.err.println("Error: Respuesta inválida, ingrese 'si' o 'no'");
+                    }
+                }
             }
 
             if (items.isEmpty()) {
@@ -840,9 +841,12 @@ public class Main {
 
             try {
                 tx.begin();
+
+                Usuario usuarioGestionado = em.find(Usuario.class, usuarioId);
+
                 Pedido pedido = Pedido.builder()
                         .fecha(LocalDate.now())
-                        .usuario(usuarioSeleccionado)
+                        .usuario(usuarioGestionado)
                         .estado(Estado.PENDIENTE)
                         .formaPago(formaDePago)
                         .build();
@@ -852,9 +856,8 @@ public class Main {
                     int cantidad = (int) i.get("cantidad");
 
                     Producto productoAgregar = em.find(Producto.class, productosId);
-                    pedido.addDetallePedido(cantidad,productoAgregar);
-
-                    productoAgregar.setStock(productoAgregar.getStock()-cantidad);
+                    pedido.addDetallePedido(cantidad, productoAgregar);
+                    productoAgregar.setStock(productoAgregar.getStock() - cantidad);
                 });
 
                 pedido.calcularTotal();
@@ -865,12 +868,12 @@ public class Main {
                 System.out.println("\n--- Pedido creado con éxito ---");
                 PedidoDTO pedidoDTO = PedidoDTO.fromEntidad(pedido);
                 System.out.println("ID: " + pedidoDTO.id());
-                System.out.println("Fecha: "+ pedidoDTO.fecha());
+                System.out.println("Fecha: " + pedidoDTO.fecha());
                 System.out.println("Usuario: " + usuarioDTO.nombre() + " " + usuarioDTO.apellido());
 
                 System.out.println("\n--- Detalle del pedido ---");
                 System.out.printf("%-10s %-20s %-10s %-10s%n",
-                        "Cantidad","Productos","Precio","Subtotal");
+                        "Cantidad", "Productos", "Precio", "Subtotal");
                 System.out.println("-".repeat(65));
 
                 // iteramos detalles del pedido
@@ -886,10 +889,10 @@ public class Main {
 
                 System.out.println("-".repeat(65));
                 System.out.println("Total: $" + String.format("%.2f", pedidoDTO.total()));
-            }catch (RuntimeException re){
-                if (tx.isActive())tx.rollback();
-                System.err.println("Error: " + re.getMessage());
-            }finally {
+            } catch (RuntimeException re) {
+                if (tx.isActive()) tx.rollback();
+                System.err.println("Error en la transacción. Se realizó Rollback. Detalle: " + re.getMessage());
+            } finally {
                 em.close();
             }
         } catch (NumberFormatException nfe) {
