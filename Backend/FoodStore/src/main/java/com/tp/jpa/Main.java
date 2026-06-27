@@ -12,6 +12,7 @@ import com.tp.jpa.model.enums.Estado;
 import com.tp.jpa.model.enums.FormaPago;
 import com.tp.jpa.model.enums.Rol;
 import com.tp.jpa.repository.CategoriaRepository;
+import com.tp.jpa.repository.PedidoRepository;
 import com.tp.jpa.repository.ProductoRepository;
 import com.tp.jpa.repository.UsuarioRepository;
 import com.tp.jpa.util.JPAUtil;
@@ -22,10 +23,11 @@ import jakarta.persistence.EntityTransaction;
 import java.time.LocalDate;
 import java.util.*;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+
 public class Main {
 
+
+    static PedidoRepository pedidoRepository = new PedidoRepository();
     static UsuarioRepository usuarioRepository = new UsuarioRepository();
     static CategoriaRepository categoriaRepository = new CategoriaRepository();
     static ProductoRepository productoRepository = new ProductoRepository();
@@ -614,6 +616,7 @@ public class Main {
                         // Guardar Cambio
                         usuarioRepository.guardar(usuario);
                         System.out.println("Usuario modificado con exito!");
+
                     }, () -> System.err.println("Usuario no encontrado o ya dado de baja"));
 
         } catch (NumberFormatException nfe) {
@@ -655,9 +658,9 @@ public class Main {
 
                     }, () -> System.out.println("usuario no encontrado o ya dado de baja"));
         } catch (NumberFormatException nfe) {
-            System.err.println("Error ingrese un numero ");
+            System.err.println("Error: ingrese un numero " +nfe.getMessage());
         } catch (Exception e) {
-            System.err.println("Error al eliminar una usuario: " + e.getMessage());
+            System.err.println("Error al eliminar un usuario: " + e.getMessage());
         }
 
 
@@ -711,7 +714,7 @@ public class Main {
 
     // Metodos del sub menu pedido
     public static void altaPedido() {
-        // Listar
+        listarPedidos();
         List<Usuario> usuarios = usuarioRepository.listarActivos()
                 .stream()
                 .filter(usuario -> usuario.getRol() == Rol.USUARIO)
@@ -780,7 +783,7 @@ public class Main {
                 Producto producto = productoOptional.get();
                 ProductoDTO productoDTO = ProductoDTO.fromEntidad(producto);
 
-                if (!producto.isDisponible()){
+                if (!producto.isDisponible()) {
                     System.err.println("Error:Producto no disponible " + productoDTO.nombre());
                     continue;
                 }
@@ -905,6 +908,113 @@ public class Main {
 
 
     }
+
+    public static void cambiarEstado() {
+         listarPedidos();
+        System.out.print("Ingrese el ID del pedido: ");
+        try {
+            Long idPedido = Long.parseLong(scanner.nextLine());
+            pedidoRepository.buscarPorId(idPedido)
+                    .ifPresentOrElse(pedido -> {
+                        System.out.println("--- Datos actuales ---");
+                        PedidoDTO pedidoDTO = PedidoDTO.fromEntidad(pedido);
+                        System.out.println("ID: " + pedidoDTO.id());
+                        System.out.println("Estado actual: " + pedidoDTO.estado());
+
+                        // Cambiar estado
+                        System.out.println("\nEliga la opcion del nuevo estado");
+                        System.out.println("1. PENDIENTE\n2. CONFIRMADO\n3. TERMINADO\n4. CANCELADO\n0. Mantener");
+
+                        int opcion = Integer.parseInt(scanner.nextLine());
+                        Estado estado = switch (opcion) {
+                            case 1 -> Estado.PENDIENTE;
+                            case 2 -> Estado.CONFIRMADO;
+                            case 3 -> Estado.TERMINADO;
+                            case 4 -> Estado.CANCELADO;
+                            case 0 -> pedido.getEstado();
+                            default -> throw new IllegalArgumentException("Opcion invalida");
+                        };
+
+                        // Actualizamos usuario con su nuevo estado
+                        pedido.setEstado(estado);
+
+                        // guardamos cambio
+                        Pedido pedidoModificado = pedidoRepository.guardar(pedido);
+
+                        System.out.println("Estado cambiado con exito!");
+                        PedidoDTO pedidoDTOModificado = PedidoDTO.fromEntidad(pedidoModificado);
+                        System.out.println("ID: " + pedidoDTOModificado.id() + ", nuevo estado: " + pedidoDTOModificado.estado().toString());
+
+                    }, () -> System.out.println("usuario no encontrado o ya dado de baja"));
+
+        } catch (NumberFormatException nfe) {
+            System.out.println("Error: ingrese un numero: " + nfe.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error al modificar un producto: " + e.getMessage());
+        }
+
+
+    }
+
+    public static void bajaLogicaPedido() {
+        listarPedidos();
+        System.out.println("Ingrese el ID del pedido a eliminar");
+        try {
+            Long idPedido = Long.parseLong(scanner.nextLine());
+            pedidoRepository.buscarPorId(idPedido).ifPresentOrElse(
+                    pedido -> {
+                        PedidoDTO pedidoDTO = PedidoDTO.fromEntidad(pedido);
+                        System.out.println("-------------------------------");
+                        System.out.println("ID: " + pedidoDTO.id());
+                        System.out.println("Total: $" + String.format("%.2f", pedidoDTO.total()));
+                        System.out.println("-------------------------------");
+                        System.out.print("Ingrese 'si' para confirmar o 'no' para cancelar: ");
+                        String opcion = scanner.nextLine();
+                        Map<String, Runnable> accion = Map.of(
+                                "si", () -> {
+                                    pedidoRepository.eliminarLogico(pedido.getId());
+                                    System.out.println("ID: " + pedidoDTO.id() +
+                                            " Total: $" + String.format("%.2f", pedidoDTO.total()) +
+                                            " Eliminado con éxito");
+                                },
+                                "no", () -> System.out.println("Operacion cancelada")
+                        );
+                        Optional.ofNullable(accion.get(opcion.toLowerCase()))
+                                .ifPresentOrElse(Runnable::run,
+                                        () -> System.out.println("Opción invalida")
+                                );
+                    },()-> System.out.println("Pedido no encontrado o ya dado de baja")
+            );
+
+        } catch (NumberFormatException nfe) {
+            System.err.println("Error: ingrese un numero " +nfe.getMessage());
+        } catch (Exception e) {
+            System.err.println("Error al eliminar un pedido: " + e.getMessage());
+        }
+
+    }
+
+    public static void listarPedidos(){
+        List<Pedido> pedidos = pedidoRepository.listarActivos();
+        System.out.println("Pedidos activos");
+        System.out.printf("%-5s %-12s %-15s %-20s %-25s %-12s%n"
+        ,"ID","Fecha","Estado","Forma de pago","Nombre(Usuario)","Total");
+        System.out.println("-".repeat(85));
+        pedidos.stream()
+                .map(PedidoDTO::fromEntidad)
+                .forEach(pedidoDTO ->
+                                System.out.printf("%-5s %-12s %-15s %-20s %-25s %-12.2f%n",
+                                        pedidoDTO.id(),
+                                        pedidoDTO.fecha(),
+                                        pedidoDTO.estado(),
+                                        pedidoDTO.formaPago(),
+                                        pedidoDTO.nombreUsuario(),
+                                        pedidoDTO.total()
+                                        )
+                        );
+
+    }
+
 
     // Metodos del sub menu reportes
     public static void mostrarProductosPorCategoria() {

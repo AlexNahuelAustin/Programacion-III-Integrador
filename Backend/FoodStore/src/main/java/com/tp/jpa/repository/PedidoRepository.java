@@ -34,6 +34,7 @@ public class PedidoRepository extends BaseRepository<Pedido> {
         }
     }
 
+
     // Buscar los pedidos por estado
     public List<Pedido> buscarPorEstado(Estado estado){
         EntityManager em = emf.createEntityManager();
