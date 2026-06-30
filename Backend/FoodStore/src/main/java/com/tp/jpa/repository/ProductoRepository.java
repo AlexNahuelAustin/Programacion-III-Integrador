@@ -17,7 +17,7 @@ public class ProductoRepository extends BaseRepository<Producto> {
         EntityManager em = emf.createEntityManager();
         try {
 
-            // Consulta JPQL tipada: retorna productos activos de una categoría específica
+            // Consulta JPQL: retorna productos activos de una categoría específica
             // Filtra por categoria.id y eliminado=false para excluir bajas lógicas
             String jpql = "SELECT p FROM Producto p WHERE p.categoria.id = :categoriaId AND p.eliminado = false";
             TypedQuery<Producto> query = em.createQuery(jpql,Producto.class);

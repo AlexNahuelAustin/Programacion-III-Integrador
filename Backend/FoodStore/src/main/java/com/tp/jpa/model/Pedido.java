@@ -20,7 +20,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = true)
 @SuperBuilder
 @ToString(exclude = {"detalles"})
 @Entity
@@ -38,7 +38,7 @@ public class Pedido extends Base implements Calculable {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
     @Builder.Default
-    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "pedido",fetch = FetchType.EAGER)
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL, mappedBy = "pedido")
     private Set<DetallePedido> detalles = new HashSet<>();
 
 

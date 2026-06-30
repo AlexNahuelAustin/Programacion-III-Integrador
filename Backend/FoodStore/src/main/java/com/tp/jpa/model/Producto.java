@@ -10,11 +10,12 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @ToString
 @SuperBuilder
-@EqualsAndHashCode(callSuper = true, exclude = {"precio", "descripcion", "stock", "imagen", "disponible", "categoria"})
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "productos")
 public class Producto extends Base {
     // Atributos
+    @EqualsAndHashCode.Include
     @Column(nullable = false,length = 50)
     private String nombre;
     @Column(nullable = false)

@@ -8,7 +8,7 @@ import com.tp.jpa.model.enums.FormaPago;
 import java.time.LocalDate;
 
 public record PedidoDTO(Long id, LocalDate fecha, FormaPago formaPago,
-                        Estado estado, int cantidadDetalle, double total, String nombreUsuario) {
+                        Estado estado, double total, String nombreUsuario) {
 
     public static PedidoDTO fromEntidad(Pedido pedido) {
         return new PedidoDTO(
@@ -16,7 +16,6 @@ public record PedidoDTO(Long id, LocalDate fecha, FormaPago formaPago,
                 pedido.getFecha(),
                 pedido.getFormaPago(),
                 pedido.getEstado(),
-                pedido.getDetalles().size(),
                 pedido.getTotal(),
                 pedido.getUsuario().getNombre() + " " + pedido.getUsuario().getApellido()
         );

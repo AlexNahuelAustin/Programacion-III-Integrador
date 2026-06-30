@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,10 +21,11 @@ public class DetallePedido extends Base {
     private int cantidad;
     @Column(nullable = false)
     private double subtotal;
+    @EqualsAndHashCode.Include
     @ManyToOne
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
-    @ManyToOne  //
+    @ManyToOne
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
 

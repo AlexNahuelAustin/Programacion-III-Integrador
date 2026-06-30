@@ -15,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @SuperBuilder
-@EqualsAndHashCode(callSuper = true, exclude = {"nombre", "apellido", "celular", "contraseña", "rol",})
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Entity
 @Table(name = "usuarios")
 public class Usuario extends Base {
