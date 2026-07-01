@@ -3,7 +3,19 @@ import type { IUser } from "../../../../types/IUser";
 import { cerrarSesion, checkAuhtUser } from "../../../../utils/auth";
 import { obtenerPedidos } from "../../../../utils/dataService";
 
-const pedidosData = await obtenerPedidos();
+const pedidosJson = await obtenerPedidos();
+
+// Recolectar pedidos guardados en localStorage de todos los usuarios
+const pedidosLocal: IPedido[] = [];
+for (let i = 0; i < localStorage.length; i++) {
+  const key = localStorage.key(i);
+  if (key && key.startsWith("pedidos_")) {
+    const ordenes: IPedido[] = JSON.parse(localStorage.getItem(key) || "[]");
+    pedidosLocal.push(...ordenes);
+  }
+}
+
+const pedidosData = [...pedidosJson, ...pedidosLocal];
 
 // Proteger ruta: redirige si no está autenticado o no es ADMIN
 checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/store/home/home.html", "ADMIN");
