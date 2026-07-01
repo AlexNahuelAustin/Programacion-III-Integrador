@@ -5,7 +5,7 @@ Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que
 -----
 
 **Parte del TPI:** Programación III (UTN)  
-**Video presentación:** [Link del video](#)
+**Video presentación:** [Link del video](https://youtu.be/8VshIO0qmSs?si=Zqzw4WgiY8RvOSkM)
 -----
 
 ### Características principales
@@ -35,9 +35,18 @@ Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que
 ### Instalación y ejecución
 
 ```bash
-# Ejecutar desde IntelliJ:
-# Click derecho en Main.java → Run
+# Limpiar build anterior
+.\gradlew clean
+
+# Compilar el proyecto
+.\gradlew build
+
+# Ejecutar la aplicación
+.\gradlew run
 ```
+
+# O desde IntelliJ:
+# Click derecho en Main.java → Run
 -----
 
 ## Estructura del Programa
