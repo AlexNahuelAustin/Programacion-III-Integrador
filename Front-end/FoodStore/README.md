@@ -21,8 +21,8 @@ Frontend del sistema e-commerce FoodStore. Aplicación web interactiva desarroll
 
 ### Tecnologías usadas
 
-- **[TypeScript](https://www.typescriptlang.org/)**
-- **[Vite](https://vitejs.dev/)** 
+- **[Node.js](https://nodejs.org/es)** v18 o superior
+- **[pnpm](https://pnpm.io/es/)** como gestor de paquetes
 - **HTML5 + CSS3** - Maquetación y estilos
 - **localStorage** - Persistencia de datos
 
@@ -33,7 +33,7 @@ Frontend del sistema e-commerce FoodStore. Aplicación web interactiva desarroll
 pnpm install
 
 # Ejecutar en desarrollo
-pnpm run dev
+pnpm run dev o pnpm dev
 
 ```
 
