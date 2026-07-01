@@ -21,14 +21,16 @@ Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que
 
 ### Tecnologías usadas
 
-- **[Java](https://www.java.com/es/)** 21 - Lenguaje de programación
-- **[JPA/Hibernate](https://hibernate.org/)** - ORM para persistencia
-- **[H2 Database](https://www.h2database.com/)** - Base de datos en archivo
-- **[Gradle](https://gradle.org/)** - Gestor de dependencias y build
+### Tecnologías usadas
 
-### Requisitos previos
+- **[Java]([https://www.java.com/es/](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html))** 21 - Lenguaje de programación
+- **[JPA/Hibernate](https://hibernate.org/)** 6.5.0 - ORM para persistencia
+- **[H2 Database](https://www.h2database.com/)** 2.2.224 - Base de datos en archivo
+- **[Maven](https://maven.apache.org/)** - Gestor de dependencias y build
+- **[Lombok](https://projectlombok.org/)** 1.18.30 - Generador de código
+- **[JUnit 5](https://junit.org/junit5/)** 6.0.0 - Framework de testing
+- **[SLF4J](https://www.slf4j.org/)** 2.0.13 - Logging
 
-- **[Java](https://www.java.com/es/)** JDK 21 o superior
 
 ### Instalación y ejecución
 
