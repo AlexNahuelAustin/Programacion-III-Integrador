@@ -34,12 +34,8 @@ Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que
 ### Instalación y ejecución
 
 ```bash
-# Compilar el proyecto
-./gradlew build
-
-# Ejecutar la aplicación (desde IntelliJ: click derecho en Main.java → Run)
-# O desde CMD:
-./gradlew run
+# Ejecutar desde IntelliJ:
+# Click derecho en Main.java → Run
 ```
 
 ---
