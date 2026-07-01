@@ -23,7 +23,7 @@ Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que
 
 ### Tecnologías usadas
 
-- **[Java]([https://www.java.com/es/](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html))** 21 - Lenguaje de programación
+- **[Java JDK 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)** - Lenguaje de programación
 - **[JPA/Hibernate](https://hibernate.org/)** 6.5.0 - ORM para persistencia
 - **[H2 Database](https://www.h2database.com/)** 2.2.224 - Base de datos en archivo
 - **[Maven](https://maven.apache.org/)** - Gestor de dependencias y build
