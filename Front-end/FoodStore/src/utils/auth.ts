@@ -20,9 +20,10 @@ export const checkAuhtUser = (
     if (parserUser.rol === "USUARIO" && rol === "ADMIN") {
       alert("Acceso denegado. Solo administradores pueden acceder.");
     }
-    if (parserUser.rol !== "ADMIN") {
-      navigate(redireccion2);
+    if (parserUser.rol === "ADMIN" && rol === "USUARIO") {
+      alert("Acceso denegado. Esta sección es solo para usuarios.");
     }
+    navigate(redireccion2);
     return;
   }
 };

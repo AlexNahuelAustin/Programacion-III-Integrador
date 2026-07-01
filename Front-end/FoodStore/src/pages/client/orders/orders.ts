@@ -3,11 +3,12 @@ import type { IUser } from "../../../types/IUser";
 import { cerrarSesion, checkAuhtUser } from "../../../utils/auth";
 import { obtenerPedidos } from "../../../utils/dataService";
 
-checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/store/home/home.html", "USUARIO");
+// Proteger ruta: redirige si no está autenticado o no es USUARIO
+checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/admin/home/adminHome/adminHome.html", "USUARIO");
 
 let pedidosData: IPedido[] = [];
 
-// Actualizar nombre usuario y carrito en header
+// Actualiza nombre usuario en header y recuenta items del carrito
 const actualizarHeader = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -19,7 +20,7 @@ const actualizarHeader = () => {
   actualizarCarrito();
 };
 
-// Actualizar contador de productos en carrito
+// Actualiza contador de items en carrito desde localStorage
 const actualizarCarrito = () => {
   const carrito = JSON.parse(localStorage.getItem("carrito") || "[]");
   const total = carrito.reduce((acc: number, item: { cantidad: number }) => acc + item.cantidad, 0);
@@ -27,7 +28,7 @@ const actualizarCarrito = () => {
   if (contador) contador.textContent = `${total}`;
 };
 
-// Renderizar tarjetas de pedidos
+// Renderiza tarjetas de pedidos: combina JSON + localStorage por usuario
 const renderizarTabla = () => {
   const contenedor = document.getElementById("tabla-pedidos");
   if (!contenedor) return;
@@ -37,18 +38,20 @@ const renderizarTabla = () => {
 
   const usuario: IUser = JSON.parse(userData);
 
-  // Obtener pedidos del JSON + localStorage
+  // Filtrar pedidos del JSON por usuario actual
   const pedidosJson = pedidosData.filter(p => Number(p.usuarioDto.id) === Number(usuario.id));
+  // Obtener pedidos guardados en localStorage del usuario
   const pedidosLocal: IPedido[] = JSON.parse(localStorage.getItem(`pedidos_${usuario.id}`) || "[]");
+  // Combinar ambas fuentes
   const misPedidos = [...pedidosJson, ...pedidosLocal];
 
   let html = '<div class="pedidos-lista">';
 
-  // Si no hay pedidos, mostrar mensaje
+  // Mostrar mensaje si no hay pedidos
   if (misPedidos.length === 0) {
     html += '<p class="sin-pedidos">No tienes pedidos</p>';
   } else {
-    // Renderizar cada pedido con sus productos
+    // Renderizar cada pedido con detalles (productos, fecha, estado, total)
     misPedidos.forEach((pedido: IPedido) => {
       const productosTexto = pedido.detalles.map(detalle => 
         `• ${detalle.producto.nombre} (x${detalle.cantidad})`
@@ -73,7 +76,7 @@ const renderizarTabla = () => {
   contenedor.innerHTML = html;
 };
 
-// Inicializar async
+// Inicializa: carga pedidos desde JSON e inicializa UI
 const init = async () => {
   pedidosData = await obtenerPedidos();
   actualizarHeader();
@@ -83,5 +86,5 @@ const init = async () => {
 // Event listeners
 document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
 
-// Ejecutar
+// Ejecutar al cargar página
 init();

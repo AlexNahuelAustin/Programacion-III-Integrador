@@ -2,11 +2,13 @@ import type { IPedido } from "../../../../types/IPedido";
 import type { IUser } from "../../../../types/IUser";
 import { cerrarSesion, checkAuhtUser } from "../../../../utils/auth";
 import { obtenerPedidos } from "../../../../utils/dataService";
+
 const pedidosData = await obtenerPedidos();
 
+// Proteger ruta: redirige si no está autenticado o no es ADMIN
 checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/store/home/home.html", "ADMIN");
 
-// Actualizar nombre usuario en header
+// Actualiza nombre usuario en header desde localStorage
 const actualizarHeader = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -17,7 +19,7 @@ const actualizarHeader = () => {
   }
 };
 
-// Abrir modal con el detalle completo de un pedido
+// Abre modal con detalles: cliente, productos, subtotales, total, forma de pago
 const abrirModalPedido = (pedido: IPedido) => {
   const modal = document.getElementById("modal-pedido") as HTMLElement;
   const titulo = document.getElementById("modal-pedido-titulo") as HTMLElement;
@@ -25,6 +27,7 @@ const abrirModalPedido = (pedido: IPedido) => {
 
   titulo.textContent = `Detalle del Pedido #ORD-${pedido.id}`;
 
+  // Mapea detalles del pedido en HTML (producto, cantidad, precio unitario, subtotal)
   const itemsHTML = pedido.detalles
     .map(
       (d) => `
@@ -38,6 +41,7 @@ const abrirModalPedido = (pedido: IPedido) => {
     )
     .join("");
 
+  // Construye el contenido del modal: datos cliente, productos, totales
   info.innerHTML = `
     <div class="modal-pedido-datos">
       <p><strong>Cliente:</strong> ${pedido.usuarioDto.nombre} ${pedido.usuarioDto.apellido}</p>
@@ -67,7 +71,7 @@ const abrirModalPedido = (pedido: IPedido) => {
   modal.style.display = "flex";
 };
 
-// Renderizar filas de pedidos
+// Llena tabla con pedidos (ID, usuario, total, estado, fecha) - click abre modal
 const renderizarTarjetas = () => {
   const tbody = document.getElementById("tbody-pedidos");
   if (!tbody) return;
@@ -89,7 +93,7 @@ const renderizarTarjetas = () => {
   });
 };
 
-// Cerrar modal
+// Cierra el modal
 const cerrarModal = () => {
   const modal = document.getElementById("modal-pedido") as HTMLElement;
   modal.style.display = "none";
@@ -98,6 +102,7 @@ const cerrarModal = () => {
 // Event listeners
 document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
 document.getElementById("cerrar-modal-pedido")?.addEventListener("click", cerrarModal);
+// Cierra modal si hace click afuera del contenido
 document.getElementById("modal-pedido")?.addEventListener("click", (e) => {
   if (e.target === e.currentTarget) cerrarModal();
 });

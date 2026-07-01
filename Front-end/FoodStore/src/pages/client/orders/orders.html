@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="es">
+﻿<html lang="es">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/assets/imagen/FoodStore.png">
@@ -8,6 +7,7 @@
     <link rel="stylesheet" href="../../../style.css">
 </head>
 <body>
+    <!-- Header: logo, navegación, carrito, usuario, logout -->
     <header class="header">
         <div class="header-izquierda">
             <a href="/src/pages/store/home/home.html" class="logo-link">
@@ -19,19 +19,24 @@
             <a href="/src/pages/client/orders/orders.html">Mis Pedidos</a>
         </nav>
         <div class="header-derecha">
+            <!-- Carrito: muestra cantidad de items -->
             <a href="/src/pages/store/cart/cart.html" class="carrito-link">
                 🛒 <span id="carritoContador">0</span>
             </a>
+            <!-- Nombre del usuario autenticado -->
             <span id="nombreUsuario" class="nombre-usuario">Usuario</span>
             <button id="logoutButton" class="btn-logout">Cerrar Sesion</button>
         </div>
     </header>
 
+    <!-- Contenedor principal: lista de pedidos del usuario -->
     <main class="main">
         <h1>Mis Pedidos</h1>
+        <!-- Contenedor rellenado por TypeScript con tarjetas de pedidos -->
         <div id="tabla-pedidos"></div>
     </main>
 
+    <!-- Footer -->
     <footer>
         <div class="footer-contenido">
             <p>&copy; 2026 Food Store. Todos los derechos reservados.</p>
@@ -43,6 +48,7 @@
         </div>
     </footer>
 
+    <!-- Script que carga y renderiza los pedidos del usuario -->
     <script type="module" src="./orders.ts"></script>
 </body>
 </html>

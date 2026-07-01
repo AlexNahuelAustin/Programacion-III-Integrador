@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="es">
+﻿<html lang="es">
 
 <head>
     <meta charset="UTF-8">
@@ -10,6 +9,7 @@
 </head>
 
 <body class="body--carrito">
+    <!-- Header: logo, navegación, carrito, usuario, logout -->
     <header class="header">
         <div class="header-left">
             <a href="/src/pages/store/home/home.html" class="logo-link">
@@ -19,19 +19,22 @@
         <nav class="header-nav">
             <a href="/src/pages/store/home/home.html">Inicio</a>
             <a href="/src/pages/client/orders/orders.html">Mis Pedidos</a>
+            <!-- Link a administración: solo visible si usuario es ADMIN -->
             <a href="/src/pages/admin/home/adminHome/adminHome.html" id="adminLink"
                 style="display: none;">Administracion</a>
         </nav>
         <div class="header-right">
+            <!-- Carrito: muestra cantidad de items -->
             <a href="/src/pages/store/cart/cart.html" class="carrito-link">
                 🛒 <span id="carritoContador">0</span>
             </a>
+            <!-- Nombre del usuario autenticado -->
             <span id="nombreUsuario" class="nombre-usuario">Usuario</span>
             <button id="logoutButton" class="btn-logout">Cerrar Sesion</button>
         </div>
     </header>
 
-    <!-- Modal de Checkout -->
+    <!-- Modal de Checkout: formulario para confirmar pedido -->
     <div id="modal-checkout" class="modal" style="display: none;">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -54,23 +57,29 @@
                 <label>Notas (opcional):</label>
                 <textarea id="checkout-notas"></textarea>
 
+                <!-- Total a pagar con envío incluido -->
                 <p>Total a pagar: $<span id="checkout-total">0</span></p>
                 <button type="submit" class="btn-confirmar">Confirmar Pedido</button>
             </form>
         </div>
     </div>
 
+    <!-- Contenedor principal: carrito de compras -->
     <main class="contenedor-carrito">
         <h1>Mi Carrito</h1>
 
+        <!-- Mensaje cuando carrito está vacío -->
         <div id="carrito-vacio" class="carrito-vacio" style="display: none;">
             <p>Tu carrito esta vacio</p>
             <a href="/src/pages/store/home/home.html" class="btn-volver">Ir al catalogo</a>
         </div>
 
+        <!-- Contenedor de carrito con items + resumen -->
         <div id="carrito-contenido">
+            <!-- Items del carrito: rellenados por TypeScript -->
             <div id="items-carrito" class="items-carrito"></div>
 
+            <!-- Resumen del pedido: subtotal, envío, total -->
             <aside class="resumen-carrito">
                 <h2>Resumen del Pedido</h2>
                 <div class="resumen-item">
@@ -86,12 +95,14 @@
                     <span>Total:</span>
                     <span id="total">$0</span>
                 </div>
+                <!-- Botones: proceder al pago, vaciar carrito -->
                 <button id="btn-proceder" class="btn-proceder">Proceder al Pago</button>
                 <button id="btn-vaciar" class="btn-vaciar">Vaciar Carrito</button>
             </aside>
         </div>
     </main>
 
+    <!-- Footer -->
     <footer>
         <div class="footer-contenido">
             <p>&copy; 2026 Food Store. Todos los derechos reservados.</p>
@@ -102,6 +113,8 @@
             </nav>
         </div>
     </footer>
+
+    <!-- Script que maneja el carrito, modal checkout y guardado de pedidos -->
     <script type="module" src="./cart.ts"></script>
 </body>
 

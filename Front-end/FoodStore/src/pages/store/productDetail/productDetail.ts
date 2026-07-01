@@ -1,7 +1,8 @@
 import type { IProducto } from "../../../types/IProducto";
 import type { IUser } from "../../../types/IUser";
 import { obtenerProductos } from "../../../utils/dataService";
-import { cerrarSesion } from "../../../utils/auth";
+import { cerrarSesion, checkAuhtUser } from "../../../utils/auth";
+checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/admin/home/adminHome/adminHome.html", "USUARIO");
 const ProductoData = await obtenerProductos();
 
 // Actualizar nombre usuario en header y mostrar admin si corresponde

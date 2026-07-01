@@ -3,8 +3,7 @@ import type { IUser } from "../../../../types/IUser";
 import { cerrarSesion, checkAuhtUser } from "../../../../utils/auth";
 import { obtenerCategorias } from "../../../../utils/dataService";
 const categoriasData = await obtenerCategorias();
-
-checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/client/orders/orders.html", "ADMIN");
+checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/store/home/home.html", "ADMIN");
 
 // Actualizar nombre usuario en header
 const actualizarHeader = () => {

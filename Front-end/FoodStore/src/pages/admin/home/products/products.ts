@@ -2,11 +2,13 @@ import type { IProducto } from "../../../../types/IProducto";
 import type { IUser } from "../../../../types/IUser";
 import { cerrarSesion, checkAuhtUser } from "../../../../utils/auth";
 import { obtenerProductos } from "../../../../utils/dataService";
+
 const productosData = await obtenerProductos();
 
-checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/client/orders/orders.html", "ADMIN");
+// Proteger ruta: redirige si no está autenticado o no es ADMIN
+checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/store/home/home.html", "ADMIN");
 
-// Header dinamico
+// Actualiza nombre usuario en header desde localStorage
 const actualizarHeader = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -17,7 +19,7 @@ const actualizarHeader = () => {
   }
 };
 
-// Renderizar tabla
+// Llena tabla con productos (ID, imagen, nombre, descripción, precio, stock, disponibilidad)
 const renderizarTabla = () => {
   const tbody = document.getElementById("tbody-productos");
   if (!tbody) return;
@@ -41,7 +43,7 @@ const renderizarTabla = () => {
   });
 };
 
-// Inicializar
+// Event listeners e inicialización
 document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
 actualizarHeader();
 renderizarTabla();

@@ -2,7 +2,7 @@ import type { IProducto } from "../../../types/IProducto";
 import type { IUser } from "../../../types/IUser";
 import { cerrarSesion } from "../../../utils/auth";
 
-// Actualizar nombre usuario en header y mostrar admin si corresponde
+// Actualiza nombre usuario en header y muestra link admin si es ADMIN
 const actualizarHeader = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -15,7 +15,7 @@ const actualizarHeader = () => {
   }
 };
 
-// Mostrar carrito 
+// Redirige a ADMIN al panel de administración si intenta acceder al carrito
 const mostrarCarrito = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -27,13 +27,13 @@ const mostrarCarrito = () => {
   }
 };
 
-// Obtener carrito de localStorage
+// Obtiene carrito desde localStorage
 const obtenerCarrito = (): (IProducto & { cantidad: number })[] => {
   const productosAgregados = localStorage.getItem("carrito");
   return productosAgregados ? JSON.parse(productosAgregados) : [];
 };
 
-// Renderizar productos del carrito
+// Renderiza items del carrito: imagen, nombre, precio, cantidad, subtotal, botones +/-/eliminar
 const productosDeCarrito = () => {
   const listCarrito = document.getElementById("items-carrito");
   if (!listCarrito) return;
@@ -75,7 +75,7 @@ const productosDeCarrito = () => {
   }
 };
 
-// Calcular total con envío fijo $1.000
+// Calcula subtotal (suma de todos los items) + envío fijo $1.000, actualiza DOM
 const calcularTotal = () => {
   const carrito = obtenerCarrito();
   const carritoContenidoEl = document.getElementById("carrito-contenido");
@@ -84,14 +84,14 @@ const calcularTotal = () => {
   const subtotalEl = document.getElementById("subtotal");
   const envioEl = document.getElementById("envio");
 
-  // Si carrito está vacío, mostrar mensaje y ocultar resumen
+  // Si carrito vacío: oculta resumen, muestra mensaje
   if (carrito.length === 0) {
     if (carritoContenidoEl) carritoContenidoEl.style.display = "none";
     if (carritoVacioEl) carritoVacioEl.style.display = "block";
     return;
   }
 
-  // Si hay productos, mostrar resumen y ocultar mensaje
+  // Si hay items: muestra resumen, oculta mensaje
   if (carritoContenidoEl) carritoContenidoEl.style.display = "";
   if (carritoVacioEl) carritoVacioEl.style.display = "none";
 
@@ -99,18 +99,20 @@ const calcularTotal = () => {
 
   const ENVIO_FIJO = 1000;
 
+  // Suma precio * cantidad de todos los items
   const subtotal = carrito.reduce((acumulador: number, producto: IProducto & { cantidad: number }) => {
     return acumulador + producto.precio * producto.cantidad;
   }, 0);
 
   const totalConEnvio = subtotal + ENVIO_FIJO;
 
+  // Actualiza etiquetas en el DOM
   if (subtotalEl) subtotalEl.textContent = `$${subtotal.toLocaleString("es-AR")}`;
   if (envioEl) envioEl.textContent = `$${ENVIO_FIJO.toLocaleString("es-AR")}`;
   if (totalEl) totalEl.textContent = `$${totalConEnvio.toLocaleString("es-AR")}`;
 };
 
-// Aumentar cantidad del producto
+// Aumenta cantidad de producto en carrito y actualiza UI
 const aumentarCantidad = (id: number) => {
   const carrito = obtenerCarrito();
   const producto = carrito.find((item: IProducto & { cantidad: number }) => item.id === id);
@@ -124,7 +126,7 @@ const aumentarCantidad = (id: number) => {
   }
 };
 
-// Disminuir cantidad del producto
+// Disminuye cantidad de producto (si llega a 0 lo elimina) y actualiza UI
 const disminuirCantidad = (id: number) => {
   const carrito = obtenerCarrito();
   const producto = carrito.find((item: IProducto & { cantidad: number }) => item.id === id);
@@ -144,7 +146,7 @@ const disminuirCantidad = (id: number) => {
   }
 };
 
-// Eliminar producto del carrito
+// Elimina producto del carrito y actualiza UI
 const eliminarProducto = (id: number) => {
   const carrito = obtenerCarrito();
   const carritoActualizado = carrito.filter(
@@ -157,7 +159,7 @@ const eliminarProducto = (id: number) => {
   actualizarContadorCarrito();
 };
 
-// Actualizar contador de productos en header
+// Actualiza contador de items totales en header
 const actualizarContadorCarrito = () => {
   const carrito = obtenerCarrito();
   const total = carrito.reduce(
@@ -169,7 +171,7 @@ const actualizarContadorCarrito = () => {
   if (contador) contador.textContent = `${total}`;
 };
 
-// Abrir modal de checkout
+// Abre modal checkout: valida sesión, carrito no vacío, calcula total
 const abrirCheckout = () => {
   const userData = localStorage.getItem("userData");
   if (!userData) { alert("Debes estar logueado"); return; }
@@ -191,18 +193,16 @@ const abrirCheckout = () => {
   const totalConEnvio = carrito.reduce((sum:number, p: IProducto & { cantidad: number }) => sum + p.precio * p.cantidad, 0) + 1000;
   totalEl.textContent = totalConEnvio.toLocaleString("es-AR");
   
- 
   modal.style.display = "flex";
 };
 
-
-// Cerrar modal de checkout
+// Cierra modal de checkout
 const cerrarCheckout = () => {
   const modal = document.getElementById("modal-checkout") as HTMLDivElement;
   modal.style.display = "none";
 };
 
-// Guardar pedido en localStorage y redirigir
+// Valida formulario y guarda pedido en localStorage por usuario, redirige a mis pedidos
 const guardarPedido = () => {
   const userData = localStorage.getItem("userData");
   if (!userData) return;
@@ -216,8 +216,10 @@ const guardarPedido = () => {
 
   const totalConEnvio = carrito.reduce((sum: number, p: IProducto & { cantidad: number }) => sum + p.precio * p.cantidad, 0) + 1000;
   
+  // Obtiene pedidos previos del usuario o crea array vacío
   const nuevosPedidos = JSON.parse(localStorage.getItem(`pedidos_${usuario.id}`) || "[]");
   
+  // Construye objeto pedido con detalles, total, método pago
   const pedido = {
     id: Date.now(),
     fecha: new Date().toLocaleDateString("es-AR"),
@@ -232,6 +234,7 @@ const guardarPedido = () => {
     usuarioDto: usuario
   };
   
+  // Guarda pedido en localStorage y limpia carrito
   nuevosPedidos.push(pedido);
   localStorage.setItem(`pedidos_${usuario.id}`, JSON.stringify(nuevosPedidos));
   localStorage.removeItem("carrito");
@@ -241,7 +244,7 @@ const guardarPedido = () => {
   window.location.href = "/src/pages/client/orders/orders.html";
 };
 
-// Event listeners
+// Event listeners: logout, botones carrito, modal, form checkout
 document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
 document.getElementById("btn-proceder")?.addEventListener("click", abrirCheckout);
 document.querySelector(".close")?.addEventListener("click", cerrarCheckout);
@@ -258,7 +261,7 @@ document.getElementById("btn-vaciar")?.addEventListener("click", () => {
   }
 });
 
-// Inicializar
+// Inicializar página: redirige ADMIN, carga header, renderiza carrito, calcula total
 mostrarCarrito()
 actualizarHeader();
 productosDeCarrito();

@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿<html lang="en">
 <head>
     <link rel="stylesheet" href="../../../style.css">
     <meta charset="UTF-8">
@@ -8,6 +7,7 @@
     <title>Login - Food Store</title>
 </head>
 <body class="body--registro--login">
+    <!-- Formulario de login -->
     <section class="login--registro">
         <img src="/assets/imagen/FoodStore.png" alt="logo food store">
         <h1>Iniciar sesion</h1>
@@ -24,8 +24,15 @@
             </div>
             <button type="submit" class="login--form--boton">Iniciar Sesión</button>
         </form>
-        <a href="/src/pages/auth/registro/registro.html">¿No tienes cuenta? Regístrate aquí</a>
+
+        <a href="/src/pages/auth/registro/registro.html">¿No tienes cuenta? Regístrate</a>
+
+        <!-- Credenciales de prueba -->
+        <div class="credenciales-prueba">
+            <p class="credenciales-titulo">Cuentas de prueba:</p>
+            <p class="credenciales-admin">Admin: admin@admin.com / 123456</p>
+            <p class="credenciales-usuario">Cliente: cliente@food.com / cliente123</p>
+        </div>
     </section>
+    <script type="module" src="../../../main.ts"></script>
     <script type="module" src="./login.ts"></script>
-</body>
-</html>

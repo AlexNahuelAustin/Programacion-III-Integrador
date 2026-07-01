@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="es">
+﻿<html lang="es">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/assets/imagen/FoodStore.png">
@@ -8,6 +7,7 @@
     <link rel="stylesheet" href="../../../style.css">
 </head>
 <body class="body-detail">
+    <!-- Header: logo, navegación, carrito, usuario, catálogo, logout -->
     <header class="header">
         <div class="header-left">
             <a href="/src/pages/store/home/home.html" class="logo-link">
@@ -17,27 +17,35 @@
         <nav class="header-nav">
             <a href="/src/pages/store/home/home.html">Inicio</a>
             <a href="/src/pages/client/orders/orders.html">Mis Pedidos</a>
+            <!-- Link a administración: solo visible si usuario es ADMIN -->
             <a href="/src/pages/admin/home/adminHome/adminHome.html" id="adminLink" style="display: none;">Administracion</a>
         </nav>
         <div class="header-right">
+            <!-- Carrito: muestra cantidad de items -->
             <a href="/src/pages/store/cart/cart.html" class="carrito-link">
                 🛒 <span id="carritoContador">0</span>
             </a>
+            <!-- Nombre del usuario autenticado -->
             <span id="nombreUsuario" class="nombre-usuario">Usuario</span>
+            <!-- Botón rápido al catálogo -->
             <a href="/src/pages/store/home/home.html" class="btn-catalogo">Catalogo</a>
             <button id="logoutButton" class="btn-logout">Cerrar Sesion</button>
         </div>
     </header>
 
+    <!-- Contenedor principal: detalle del producto 2-columnas -->
     <main class="main-detail">
         <div class="contenedor-detail-card">
+            <!-- Detalle del producto: imagen, nombre, descripción, precio, cantidad, agregar al carrito -->
             <div id="contenedor-detail" class="contenedor-detail"></div>
+            <!-- Botón volver al catálogo -->
             <div class="contenedor-volver">
                 <a href="/src/pages/store/home/home.html" class="btn-volver">← Volver</a>
             </div>
         </div>
     </main>
 
+    <!-- Footer -->
     <footer>
         <div class="footer-contenido">
             <p>&copy; 2026 Food Store. Todos los derechos reservados.</p>
@@ -49,6 +57,7 @@
         </div>
     </footer>
 
+    <!-- Script que carga detalle del producto, calcula precio, agrega al carrito -->
     <script type="module" src="./productDetail.ts"></script>
 </body>
 </html>

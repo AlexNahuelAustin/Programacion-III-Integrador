@@ -1,15 +1,15 @@
-﻿<!DOCTYPE html>
-<html lang="es">
+﻿<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/assets/imagen/FoodStore.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FoodStore - Panel de Administración</title>
-        <link rel="stylesheet" href="../../../../style.css">
+    <link rel="stylesheet" href="../../../../style.css">
 </head>
 
 <body class="body--admin">
+    <!-- Header: logo, navegación y datos del usuario -->
     <header class="header">
         <div class="header-left">
             <a href="/src/pages/admin/home/adminHome/adminHome.html" class="logo-link">
@@ -20,12 +20,15 @@
             <a href="/src/pages/store/home/home.html">Volver al Catálogo</a>
         </nav>
         <div class="header-right">
+            <!-- Muestra el nombre del usuario desde localStorage -->
             <span id="nombreUsuario" class="nombre-usuario">Admin</span>
             <button id="logoutButton" class="btn-logout">Cerrar Sesion</button>
         </div>
     </header>
 
+    <!-- Contenedor principal: sidebar + contenido -->
     <main class="admin-container">
+        <!--  navegación a módulos (Categorías, Productos, Pedidos) -->
         <aside class="admin-sidebar">
             <div class="sidebar-header">
                 <h2>Administración</h2>
@@ -50,10 +53,13 @@
             </nav>
         </aside>
 
+        <!-- Contenido: tarjetas de estadísticas + resumen -->
         <section class="admin-content">
             <h1>Panel de Administración</h1>
 
+            <!-- 4 tarjetas: Categorías, Productos, Pedidos, Disponibles -->
             <div class="admin-cards">
+                <!-- Tarjeta 1: Total de categorías -->
                 <div class="admin-card card-categorias">
                     <div class="card-icon">📁</div>
                     <h3>Categorias</h3>
@@ -61,6 +67,7 @@
                     <a href="/src/pages/admin/home/categories/categories.html" class="btn-gestionar">Gestionar</a>
                 </div>
 
+                <!-- Tarjeta 2: Total de productos -->
                 <div class="admin-card card-productos">
                     <div class="card-icon">🍔</div>
                     <h3>Productos</h3>
@@ -68,6 +75,7 @@
                     <a href="/src/pages/admin/home/products/products.html" class="btn-gestionar">Gestionar</a>
                 </div>
 
+                <!-- Tarjeta 3: Total de pedidos -->
                 <div class="admin-card card-pedidos">
                     <div class="card-icon">📦</div>
                     <h3>Pedidos</h3>
@@ -75,6 +83,7 @@
                     <a href="/src/pages/admin/home/orders/orders.html" class="btn-gestionar">Gestionar</a>
                 </div>
 
+                <!-- Tarjeta 4: Productos disponibles (disponible = true) -->
                 <div class="admin-card card-disponibles">
                     <div class="card-icon">✅</div>
                     <h3>Disponibles</h3>
@@ -83,6 +92,7 @@
                 </div>
             </div>
 
+            <!-- Resumen rápido con totales detallados -->
             <div class="admin-resumen">
                 <h2>📊 Resumen Rápido</h2>
                 <div class="resumen-content">
@@ -92,6 +102,7 @@
         </section>
     </main>
 
+    <!-- Footer -->
     <footer>
         <div class="footer-contenido">
             <p>&copy; 2026 Food Store. Todos los derechos reservados.</p>
@@ -103,6 +114,7 @@
         </div>
     </footer>
 
+    <!-- Script TypeScript que carga estadísticas e inicializa eventos -->
     <script type="module" src="./adminHome.ts"></script>
 </body>
 

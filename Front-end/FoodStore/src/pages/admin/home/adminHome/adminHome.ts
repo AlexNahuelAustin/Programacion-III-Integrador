@@ -1,11 +1,15 @@
 import type { IUser } from "../../../../types/IUser";
-import { cerrarSesion } from "../../../../utils/auth";
+import { cerrarSesion, checkAuhtUser } from "../../../../utils/auth";
 import { obtenerProductos, obtenerCategorias, obtenerPedidos } from "../../../../utils/dataService";
 
+checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/store/home/home.html", "ADMIN");
+
+// Fetch inicial de datos desde JSON locales
 const ProductosData = await obtenerProductos();
 const CategoriasData = await obtenerCategorias();
 const PedidosData = await obtenerPedidos();
 
+// Actualiza el nombre del usuario en el header desde localStorage
 const actualizarHeader = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -15,6 +19,7 @@ const actualizarHeader = () => {
   }
 };
 
+// Carga estadísticas: totales de categorías, productos, pedidos y productos disponibles
 const cargarEstadisticas = () => {
   const totalCategorias = CategoriasData.length;
   const totalProductos = ProductosData.length;
@@ -42,6 +47,7 @@ const cargarEstadisticas = () => {
   }
 };
 
+// Oculta el carrito si el usuario es ADMIN (los admins no compran)
 const ocultarCarrito = () => {
   const userData = localStorage.getItem("userData");
   if (userData) {
@@ -53,6 +59,7 @@ const ocultarCarrito = () => {
   }
 };
 
+// Event listeners e inicialización
 document.getElementById("logoutButton")?.addEventListener("click", cerrarSesion);
 actualizarHeader();
 cargarEstadisticas();

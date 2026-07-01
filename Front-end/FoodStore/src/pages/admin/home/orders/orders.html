@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="es">
+﻿<html lang="es">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/assets/imagen/FoodStore.png">
@@ -8,6 +7,7 @@
     <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="body--admin">
+    <!-- Header: logo, navegación, datos usuario -->
     <header class="header">
         <div class="header-left">
             <a href="/src/pages/admin/home/adminHome/adminHome.html" class="logo-link">
@@ -23,7 +23,9 @@
         </div>
     </header>
 
+    <!-- Sidebar + contenido -->
     <main class="admin-container">
+        <!-- Sidebar: navegación a módulos -->
         <aside class="admin-sidebar">
             <div class="sidebar-header">
                 <h2>Administración</h2>
@@ -48,8 +50,10 @@
             </nav>
         </aside>
 
+        <!-- Contenido: tabla de pedidos clickeable -->
         <section class="admin-content">
             <h1>Gestión de Pedidos</h1>
+            <!-- Tabla rellenada por TypeScript, click abre modal con detalles -->
             <table class="tabla-admin">
                 <thead>
                     <tr>
@@ -61,11 +65,13 @@
                     </tr>
                 </thead>
                 <tbody id="tbody-pedidos">
+                    <!-- Filas generadas dinámicamente -->
                 </tbody>
             </table>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer>
         <div class="footer-contenido">
             <p>&copy; 2026 Food Store. Todos los derechos reservados.</p>
@@ -77,7 +83,7 @@
         </div>
     </footer>
 
-    <!-- Modal detalle pedido -->
+    <!-- Modal: muestra detalles completos del pedido (productos, totales, datos cliente) -->
     <div id="modal-pedido" class="modal" style="display:none;">
         <div class="modal-content modal-pedido-content">
             <span class="close" id="cerrar-modal-pedido">&times;</span>
@@ -86,6 +92,7 @@
         </div>
     </div>
 
+    <!-- Script que carga, renderiza y abre modal de pedidos -->
     <script type="module" src="./orders.ts"></script>
 </body>
 </html>

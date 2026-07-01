@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<html lang="es">
+﻿<html lang="es">
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/assets/imagen/FoodStore.png">
@@ -8,6 +7,7 @@
     <link rel="stylesheet" href="../../../../style.css">
 </head>
 <body class="body--admin">
+    <!-- Header: logo, navegación, datos usuario -->
     <header class="header">
         <div class="header-left">
             <a href="/src/pages/admin/home/adminHome/adminHome.html" class="logo-link">
@@ -23,7 +23,9 @@
         </div>
     </header>
 
+    <!-- Sidebar + contenido -->
     <main class="admin-container">
+        <!-- Sidebar: navegación a módulos -->
         <aside class="admin-sidebar">
             <div class="sidebar-header">
                 <h2>Administración</h2>
@@ -48,8 +50,10 @@
             </nav>
         </aside>
 
+        <!-- Contenido: tabla de categorías (read-only) -->
         <section class="admin-content">
             <h1>Gestión de Categorías</h1>
+            <!-- Tabla que será rellenada por TypeScript con categorías desde JSON -->
             <table class="tabla-admin">
                 <thead>
                     <tr>
@@ -59,11 +63,13 @@
                     </tr>
                 </thead>
                 <tbody id="tbody-categorias">
+                    <!-- Filas generadas dinámicamente por TypeScript -->
                 </tbody>
             </table>
         </section>
     </main>
 
+    <!-- Footer -->
     <footer>
         <div class="footer-contenido">
             <p>&copy; 2026 Food Store. Todos los derechos reservados.</p>
@@ -75,8 +81,7 @@
         </div>
     </footer>
 
+    <!-- Script que carga y renderiza las categorías -->
     <script type="module" src="./categories.ts"></script>
-</body>
-</html>type="module" src="./categories.ts"></script>
 </body>
 </html>
