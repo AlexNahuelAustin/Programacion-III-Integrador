@@ -2,12 +2,11 @@
 
 Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que proporciona la lógica de negocio y persistencia de datos.
 
----
+-----
 
 **Parte del TPI:** Programación III (UTN)  
 **Video presentación:** [Link del video](#)
-
----
+-----
 
 ### Características principales
 
@@ -18,6 +17,7 @@ Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que
 - **Detalles de pedido:** Relación 1:N entre pedidos y productos
 - **Reportes JPQL:** Productos por categoría, pedidos por usuario/estado, totales facturados
 - **Menú interactivo:** Interfaz de consola para todas las operaciones
+-----
 
 ### Tecnologías usadas
 
@@ -26,6 +26,7 @@ Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que
 - **[H2 Database](https://mvnrepository.com/artifact/com.h2database/h2)** 2.2.224 - Base de datos en archivo
 - **[Lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)** 1.18.30 - Generador de código
 - **[SLF4J](https://mvnrepository.com/artifact/org.slf4j/slf4j-simple)** 2.0.13 - Logging
+-----
 
 ### Requisitos previos
 
@@ -37,8 +38,7 @@ Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que
 # Ejecutar desde IntelliJ:
 # Click derecho en Main.java → Run
 ```
-
----
+-----
 
 ## Estructura del Programa
 
@@ -51,3 +51,33 @@ src/main/java/com/tp/jpa/
 ├── repository/         # (BaseRepository, CategoriaRepository, PedidoRepository, ProductoRepository, UsuarioRepository)
 └── util/              # (JPAUtil, Main)
 ```
+-----
+
+### Funcionalidades Detalladas
+
+#### Gestión de Categorías
+- Alta
+- Modificación
+- Baja lógica
+- Listado de categorías activas
+
+#### Gestión de Productos
+- Alta, Modificación, Baja lógica
+- Listado de productos
+- Asociación con categorías
+- Control de stock y disponibilidad
+
+#### Gestión de Usuarios
+- Alta, Modificación, Baja lógica
+- Listado de usuarios
+- Búsqueda por correo electrónico
+
+#### Gestión de Pedidos
+- Creación, Modificación de estado, Baja lógica
+- Consulta, Búsqueda por usuario y estado
+- Descuento automático de stock
+
+#### Reportes
+- Productos por categoría
+- Pedidos por usuario/estado
+- Total facturado
