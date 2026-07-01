@@ -1,14 +1,11 @@
 # FoodStore - Frontend
 
 Frontend del sistema e-commerce FoodStore. Aplicación web interactiva desarrollada con TypeScript y Vite.
-
----
-
+-----
 **Parte del TPI:** Programación III (UTN)  
 **Video presentación:** [Link del video](#)
 
----
-
+-----
 ### Características principales
 
 - **Catálogo dinámico:** Grid de productos con filtro por categorías y buscador
@@ -18,6 +15,7 @@ Frontend del sistema e-commerce FoodStore. Aplicación web interactiva desarroll
 - **Mis Pedidos:** Historial de pedidos del usuario autenticado
 - **Panel Administrativo:** Dashboard con estadísticas, tablas read-only de categorías/productos/pedidos
 - **Protección de rutas:** Redireccionamiento según rol (ADMIN/USUARIO)
+-----
 
 ### Tecnologías usadas
 
@@ -25,6 +23,7 @@ Frontend del sistema e-commerce FoodStore. Aplicación web interactiva desarroll
 - **[pnpm](https://pnpm.io/es/)** como gestor de paquetes
 - **HTML5 + CSS3** - Maquetación y estilos
 - **localStorage** - Persistencia de datos
+-----
 
 ### Instalación y ejecución
 
@@ -36,6 +35,7 @@ pnpm install
 pnpm run dev o pnpm dev
 
 ```
+-----
 
 ### Credenciales de prueba
 
@@ -47,7 +47,7 @@ Password: `123456`
 Email: `cliente@food.com`  
 Password: `cliente123`
 
----
+-----
 
 ## Estructura del Programa
 
@@ -64,3 +64,36 @@ src/
 ├── style.css           # Estilos globales
 └── main.ts             # Routing y protección de rutas
 ```
+-----
+
+### Funcionalidades Detalladas
+
+#### Autenticación
+- Login con validación de credenciales
+- Registro de nuevos usuarios
+- Logout y cierre de sesión
+
+#### Catálogo
+- Visualizar productos en grid
+- Filtrar por categorías
+- Buscador de productos
+
+#### Carrito
+- Agregar productos al carrito
+- Aumentar/Disminuir cantidad
+- Eliminar productos
+- Calcular subtotal, envío y total
+
+#### Checkout
+- Formulario con datos de entrega
+- Selección de método de pago
+- Confirmación de pedido
+
+#### Mis Pedidos
+- Visualizar historial de pedidos
+- Ver detalles (productos, total, estado)
+
+#### Panel Admin
+- Dashboard con estadísticas
+- Visualizar categorías, productos y pedidos
+- Protección por rol
