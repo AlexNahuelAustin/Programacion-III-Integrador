@@ -16,24 +16,22 @@ repositories {
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:6.0.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    // Anotaciones lombok
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
-    // Jakarta Persistence API (JPA)
+    // JPA (Jakarta Persistence API) + Hibernate 6 como proveedor
+    implementation 'org.hibernate.orm:hibernate-core:6.4.4.Final'
     implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
-    // Hibernate ORM (implementación de JPA)
-    implementation 'org.hibernate.orm:hibernate-core:6.5.0.Final'
-    // H2 Database
-    runtimeOnly 'com.h2database:h2:2.2.224'
-    // SLF4J
+    compileOnly 'org.projectlombok:lombok:1.18.38'
+    annotationProcessor 'org.projectlombok:lombok:1.18.38'
+
+    testCompileOnly 'org.projectlombok:lombok:1.18.38'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.38'
+
+    // Base de datos H2 en modo archivo
+    implementation 'com.h2database:h2:2.2.224'
     implementation 'org.slf4j:slf4j-simple:2.0.13'
 }
 
 application {
-    mainClass = 'com.tp.jpa.util.Main'
+    mainClass = 'com.tp.jpa.Main'
 }
 
 run {
