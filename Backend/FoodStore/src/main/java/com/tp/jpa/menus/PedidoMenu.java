@@ -1,4 +1,5 @@
 package com.tp.jpa.menus;
+
 import com.tp.jpa.model.Pedido;
 import com.tp.jpa.model.Producto;
 import com.tp.jpa.model.Usuario;
@@ -16,6 +17,7 @@ import com.tp.jpa.util.JPAUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -285,6 +287,10 @@ public class PedidoMenu {
             Long idPedido = Long.parseLong(scanner.nextLine());
             pedidoRepository.buscarPorId(idPedido)
                     .ifPresentOrElse(pedido -> {
+                        if (pedido.isEliminado()) {
+                            System.out.println("Pedido no encontrado o ya dado de baja");
+                            return;
+                        }
                         System.out.println("--- Datos actuales ---");
                         PedidoDTO pedidoDTO = PedidoDTO.fromEntidad(pedido);
                         System.out.println("ID: " + pedidoDTO.id());
@@ -312,7 +318,7 @@ public class PedidoMenu {
                         PedidoDTO pedidoDTOModificado = PedidoDTO.fromEntidad(pedidoModificado);
                         System.out.println("ID: " + pedidoDTOModificado.id() + ", nuevo estado: " + pedidoDTOModificado.estado().toString());
 
-                    }, () -> System.out.println("usuario no encontrado o ya dado de baja"));
+                    }, () -> System.out.println("Pedido no encontrado o ya dado de baja"));
 
         } catch (NumberFormatException nfe) {
             System.out.println("Error: ingrese un numero valido: " + nfe.getMessage());
@@ -335,6 +341,10 @@ public class PedidoMenu {
             Long idPedido = Long.parseLong(scanner.nextLine());
             pedidoRepository.buscarPorId(idPedido).ifPresentOrElse(
                     pedido -> {
+                        if (pedido.isEliminado()) {
+                            System.out.println("Pedido no encontrado o ya dado de baja");
+                            return;
+                        }
                         PedidoDTO pedidoDTO = PedidoDTO.fromEntidad(pedido);
                         System.out.println("-------------------------------");
                         System.out.println("ID: " + pedidoDTO.id());
@@ -445,7 +455,6 @@ public class PedidoMenu {
             System.out.printf("%-5s %-12s %-15s %-20s %-12s%n",
                     "ID", "Fecha", "Estado", "Forma de pago", "Total");
             System.out.println("-".repeat(70));
-            System.out.println("-".repeat(65));
             pedidos.stream()
                     .map(PedidoDTO::fromEntidad)
                     .forEach(
@@ -456,7 +465,6 @@ public class PedidoMenu {
                                     pedidoDTO.estado(),
                                     pedidoDTO.formaPago(),
                                     pedidoDTO.total()
-
                             )
                     );
         } catch (NumberFormatException nfe) {

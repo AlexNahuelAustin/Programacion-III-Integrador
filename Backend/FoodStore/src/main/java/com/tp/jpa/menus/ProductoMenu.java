@@ -159,6 +159,10 @@ public class ProductoMenu {
             Long idABuscar = Long.parseLong(scanner.nextLine().trim());
             productoRepository.buscarPorId(idABuscar)
                     .ifPresentOrElse(producto -> {
+                        if (producto.isEliminado()){
+                            System.err.println("Producto no encontrado o ya dado de baja");
+                            return;
+                        }
                         ProductoDTO productoDTO = ProductoDTO.fromEntidad(producto);
                         System.out.println("\n---------- Datos Actuales ----------");
                         System.out.println("Nombre actual: " + productoDTO.nombre());

@@ -5,7 +5,7 @@ import jakarta.persistence.Persistence;
 
 public class JPAUtil {
 
-    private static final String PERSISTENCE_UNIT = "anda";
+    private static final String PERSISTENCE_UNIT = "FoodStoreIntegrador";
 
     private static EntityManagerFactory emf;
 

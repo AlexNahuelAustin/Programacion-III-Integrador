@@ -1,8 +1,10 @@
 package com.tp.jpa.menus;
+
 import com.tp.jpa.model.Categoria;
 import com.tp.jpa.model.dtos.CategoriaDTO;
 import com.tp.jpa.repository.CategoriaRepository;
 import com.tp.jpa.repository.ProductoRepository;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -60,6 +62,7 @@ public class CategoriaMenu {
     }
 
     // Métodos del sub menu de categoria
+
     /**
      * Crea una nueva categoría.
      * Válida que el nombre no esté vacío y no sea duplicado.
@@ -114,6 +117,10 @@ public class CategoriaMenu {
             Long idABuscar = Long.parseLong(scanner.nextLine());
             categoriaRepository.buscarPorId(idABuscar)
                     .ifPresentOrElse(categoria -> {
+                        if (categoria.isEliminado()) {
+                            System.out.println("Categoria no existente o ya dada de baja");
+                            return;
+                        }
                         CategoriaDTO categoriaDTO = CategoriaDTO.fromEntidad(categoria);
                         System.out.println("\n---------- Datos Actuales ----------");
                         System.out.println("Nombre actual: " + categoriaDTO.nombre());
@@ -134,7 +141,7 @@ public class CategoriaMenu {
                         categoriaRepository.guardar(categoria);
                         System.out.println("Categoria modificada con exito!");
 
-                    }, () -> System.err.println("Error: no existe categoria con ese ID"));
+                    }, () -> System.out.println("Categoria no existente o ya dada de baja"));
         } catch (NumberFormatException nfe) {
             System.err.println("Error ingrese un numero valido");
         } catch (Exception e) {
