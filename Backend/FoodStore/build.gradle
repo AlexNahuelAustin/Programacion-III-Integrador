@@ -1,9 +1,15 @@
 plugins {
     id 'java'
+    id 'application'
 }
 
 group = 'org.example'
 version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
 
 repositories {
     mavenCentral()
@@ -24,9 +30,20 @@ dependencies {
     runtimeOnly 'com.h2database:h2:2.2.224'
     // SLF4J
     implementation 'org.slf4j:slf4j-simple:2.0.13'
+}
 
+application {
+    mainClass = 'com.tp.jpa.util.Main'
+}
+
+run {
+    standardInput = System.in
 }
 
 test {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
