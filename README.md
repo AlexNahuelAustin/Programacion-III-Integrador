@@ -5,7 +5,8 @@ descripcion del proyecto: es un sistema e-commerce (FoodStore) completo desarrol
 * Alumno: Austin Alex Nahuel
 * Comision: 6
 * Trabajo Practico integrador: FoodStore (Frontend y Backend)
-* Link del video: 
+* Link del video:
+* 
 
 
 
