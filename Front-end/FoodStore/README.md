@@ -21,8 +21,8 @@ Frontend del sistema e-commerce FoodStore. Aplicación web interactiva desarroll
 
 ### Tecnologías usadas
 
-- **[TypeScript](https://www.typescriptlang.org/)** - Tipado estático
-- **[Vite](https://vitejs.dev/)** - Build tool rápido
+- **[TypeScript](https://www.typescriptlang.org/)**
+- **[Vite](https://vitejs.dev/)** 
 - **HTML5 + CSS3** - Maquetación y estilos
 - **localStorage** - Persistencia de datos
 
