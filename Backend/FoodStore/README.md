@@ -34,7 +34,7 @@ Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que
 
 ### Instalación y ejecución
 
-``` Terminal
+```Terminal
 # Compilar el proyecto
 gradle build
 
