@@ -21,25 +21,25 @@ Backend del sistema e-commerce FoodStore. Aplicación Java con JPA/Hibernate que
 
 ### Tecnologías usadas
 
-### Tecnologías usadas
-
 - **[Java JDK 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)** - Lenguaje de programación
-- **[JPA/Hibernate](https://hibernate.org/)** 6.5.0 - ORM para persistencia
-- **[H2 Database](https://www.h2database.com/)** 2.2.224 - Base de datos en archivo
-- **[Maven](https://maven.apache.org/)** - Gestor de dependencias y build
-- **[Lombok](https://projectlombok.org/)** 1.18.30 - Generador de código
-- **[JUnit 5](https://junit.org/junit5/)** 6.0.0 - Framework de testing
-- **[SLF4J](https://www.slf4j.org/)** 2.0.13 - Logging
+- **[JPA/Hibernate](https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core)** 6.5.0 - ORM para persistencia
+- **[H2 Database](https://mvnrepository.com/artifact/com.h2database/h2)** 2.2.224 - Base de datos en archivo
+- **[Lombok](https://mvnrepository.com/artifact/org.projectlombok/lombok)** 1.18.30 - Generador de código
+- **[SLF4J](https://mvnrepository.com/artifact/org.slf4j/slf4j-simple)** 2.0.13 - Logging
 
+### Requisitos previos
+
+- **[Java JDK 21](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html)** o superior
 
 ### Instalación y ejecución
 
 ```bash
 # Compilar el proyecto
-gradle build
+./gradlew build
 
-# Ejecutar la aplicación
-gradle run
+# Ejecutar la aplicación (desde IntelliJ: click derecho en Main.java → Run)
+# O desde CMD:
+./gradlew run
 ```
 
 ---
