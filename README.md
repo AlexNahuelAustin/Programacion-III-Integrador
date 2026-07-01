@@ -17,6 +17,7 @@ descripcion del proyecto: es un sistema e-commerce (FoodStore) completo desarrol
 - **Historial de pedidos:** Cada cliente puede ver sus pedidos confirmados
 - **Panel administrativo:** Visualizar estadísticas, gestionar categorías/productos/pedidos
 - **Persistencia:** Datos en localStorage (frontend) + H2 (backend)
+
   
 
 
