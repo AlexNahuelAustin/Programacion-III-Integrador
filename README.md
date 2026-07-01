@@ -1,6 +1,6 @@
 # Programación III - Trabajo Práctico Integrador
 
-## FoodStore - Sistema E-commerce
+# FoodStore - Sistema E-commerce
 
 Es un sistema e-commerce completo desarrollado como TPI de Programación III en la UTN. Consta de un frontend web (TypeScript + Vite) y un backend robusto (Java + JPA + Hibernate).
 
