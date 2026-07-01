@@ -1,14 +1,13 @@
 # Programación III - Trabajo Práctico Integrador
 
 descripcion del proyecto: es un sistema e-commerce (FoodStore) completo desarrollado como TPI de Programación III en la UTN. Consta de un frontend web  (TypeScript + Vite) y un backend  (Java + JPA + Hibernate).
----
+-----
 
 **Alumno:** Austin Alex Nahuel  
 **Comisión:** 6  
 **Trabajo Práctico Integrador:** FoodStore (Frontend y Backend)  
 **Video presentación:** [Link del video](#)
-
----
+-----
 
 ### Características principales
 
@@ -17,7 +16,11 @@ descripcion del proyecto: es un sistema e-commerce (FoodStore) completo desarrol
 - **Autenticación:** Login/registro de usuarios con roles (ADMIN/USUARIO)
 - **Historial de pedidos:** Cada cliente puede ver sus pedidos confirmados
 - **Panel administrativo:** Visualizar estadísticas, gestionar categorías/productos/pedidos
-- **Persistencia:** Datos en localStorage (frontend) + H2 (backend)
+- **Gestión CRUD:** Alta, baja, modificación de categorías, productos y pedidos
+- **Validación de Stock:** Descuento automático y validación de disponibilidad
+- **Reportes:** Consultas JPQL de productos, pedidos y totales facturados
+- **Persistencia de Datos:** localStorage (frontend) + H2 Database (backend)
+-----
 
 ### Tecnologías usadas
 
