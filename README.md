@@ -30,7 +30,7 @@ descripcion del proyecto: es un sistema e-commerce (FoodStore) completo desarrol
 
 ## Sobre el Proyecto
 
-Este TPI demuestra el dominio de una arquitectura full-stack completa. Durante el desarrollo se 
+# Este TPI demuestra el dominio de una arquitectura full-stack completa. Durante el desarrollo se 
 aplicaron patrones de diseño como DTO, Repository Pattern y transacciones atómicas. El proyecto 
 aborda desafíos reales como validación de datos, protección de rutas, manejo de errores y persistencia 
 segura. FoodStore constituye una base sólida que puede extenderse con APIs reales, sistemas de pago 
