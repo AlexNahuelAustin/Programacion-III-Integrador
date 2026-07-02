@@ -108,7 +108,7 @@ public class UsuarioMenu {
 
             // Validar que el mail no esté en uso
             if (usuarioRepository.buscarPorMail(mail).isPresent()) {
-                System.err.println("Error: El mail ya está registrado");
+                System.out.println("Error: El mail ya está registrado");
                 return;
             }
 
