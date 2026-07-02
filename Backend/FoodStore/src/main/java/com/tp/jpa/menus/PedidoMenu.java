@@ -174,10 +174,24 @@ public class PedidoMenu {
                     continue;
                 }
 
-                Map<String, Object> item = new HashMap<>();
-                item.put("productoId", idProducto);
-                item.put("cantidad", cantidadProducto);
-                items.add(item);
+                // VERIFICAR SI EL PRODUCTO YA EXISTE EN ITEMS
+                Map<String, Object> productoExistente = items.stream()
+                        .filter(item -> item.get("productoId").equals(idProducto))
+                        .findFirst()
+                        .orElse(null);
+
+                if (productoExistente != null) {
+                    // Si existe, aumentar cantidad
+                    int cantidadActual = (int) productoExistente.get("cantidad");
+                    productoExistente.put("cantidad", cantidadActual + cantidadProducto);
+                } else {
+                    // Si no existe, agregarlo nuevo
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("productoId", idProducto);
+                    item.put("cantidad", cantidadProducto);
+                    items.add(item);
+                }
+
                 System.out.println("Producto agregado.");
 
                 boolean respuestaValida = false;
