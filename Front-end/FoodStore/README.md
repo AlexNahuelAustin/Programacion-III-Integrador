@@ -3,7 +3,7 @@
 Frontend del sistema e-commerce FoodStore. Aplicación web interactiva desarrollada con TypeScript y Vite.
 -----
 **Parte del TPI:** Programación III (UTN)  
-**Video presentación:** [Link del video](https://youtu.be/8VshIO0qmSs?si=Zqzw4WgiY8RvOSkM)
+**Video presentación:** [Link del video](https://youtu.be/A5Y7XRBFGy8?si=eUa_g6GJbj-8YUTn)
 -----
 ### Características principales
 
