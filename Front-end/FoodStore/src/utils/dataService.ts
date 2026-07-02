@@ -8,9 +8,22 @@ export const obtenerUsuarios = async (): Promise<IUser[]> => {
   return res.json();
 };
 
+const PRODUCTOS_OVERRIDES_KEY = "productosOverrides";
+
+// Cambios de producto (edición, baja lógica) guardados en localStorage por el admin
+export const obtenerProductosOverrides = (): Record<number, Partial<IProducto>> => {
+  return JSON.parse(localStorage.getItem(PRODUCTOS_OVERRIDES_KEY) || "{}");
+};
+
+export const guardarProductosOverrides = (overrides: Record<number, Partial<IProducto>>) => {
+  localStorage.setItem(PRODUCTOS_OVERRIDES_KEY, JSON.stringify(overrides));
+};
+
 export const obtenerProductos = async (): Promise<IProducto[]> => {
   const res = await fetch("/data/productos.json");
-  return res.json();
+  const productos: IProducto[] = await res.json();
+  const overrides = obtenerProductosOverrides();
+  return productos.map((producto) => ({ ...producto, ...overrides[producto.id] }));
 };
 
 export const obtenerCategorias = async (): Promise<ICategoria[]> => {

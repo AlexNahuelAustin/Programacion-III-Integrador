@@ -1,4 +1,4 @@
-﻿html<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -65,6 +65,7 @@
                         <th>Precio</th>
                         <th>Stock</th>
                         <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tbody-productos">
@@ -73,6 +74,35 @@
             </table>
         </section>
     </main>
+
+    <!-- Modal: editar producto (nombre, descripción, precio, stock, disponibilidad) -->
+    <div id="modal-producto" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" id="cerrar-modal-producto">&times;</span>
+            <h2>Editar Producto</h2>
+            <form id="form-producto">
+                <label>Nombre:</label>
+                <input type="text" id="producto-nombre" placeholder="Ej: Hamburguesa Clásica" required>
+
+                <label>Descripción:</label>
+                <textarea id="producto-descripcion" placeholder="Ej: Carne 150g, lechuga y tomate"></textarea>
+
+                <label>Precio:</label>
+                <input type="number" id="producto-precio" min="0" step="0.01" placeholder="Ej: 4500" required>
+
+                <label>Stock:</label>
+                <input type="number" id="producto-stock" min="0" step="1" placeholder="Ej: 50" required>
+
+                <label>Disponibilidad:</label>
+                <select id="producto-disponible" required>
+                    <option value="true">Disponible</option>
+                    <option value="false">No disponible</option>
+                </select>
+
+                <button type="submit" class="btn-confirmar">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer>

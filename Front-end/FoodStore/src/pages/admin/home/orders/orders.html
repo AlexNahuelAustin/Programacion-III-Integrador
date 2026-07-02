@@ -53,6 +53,18 @@
         <!-- Contenido: tabla de pedidos clickeable -->
         <section class="admin-content">
             <h1>Gestión de Pedidos</h1>
+
+            <!-- Filtro por estado -->
+            <div class="filtro-pedidos">
+                <label for="filtro-estado">Filtrar por estado:</label>
+                <select id="filtro-estado">
+                    <option value="Todos">Todos</option>
+                    <option value="PENDIENTE">PENDIENTE</option>
+                    <option value="EN_PREPARACION">EN_PREPARACION</option>
+                    <option value="ENTREGADO">ENTREGADO</option>
+                </select>
+            </div>
+
             <!-- Tabla rellenada por TypeScript, click abre modal con detalles -->
             <table class="tabla-admin">
                 <thead>
@@ -62,6 +74,7 @@
                         <th>Total</th>
                         <th>Estado</th>
                         <th>Fecha</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tbody-pedidos">
@@ -89,6 +102,24 @@
             <span class="close" id="cerrar-modal-pedido">&times;</span>
             <h2 id="modal-pedido-titulo" class="modal-pedido-titulo"></h2>
             <div id="modal-pedido-info"></div>
+        </div>
+    </div>
+
+    <!-- Modal: cambiar estado del pedido -->
+    <div id="modal-estado" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" id="cerrar-modal-estado">&times;</span>
+            <h2>Cambiar Estado del Pedido</h2>
+            <form id="form-estado">
+                <label>Estado:</label>
+                <select id="estado-select" required>
+                    <option value="PENDIENTE">PENDIENTE</option>
+                    <option value="EN_PREPARACION">EN_PREPARACION</option>
+                    <option value="ENTREGADO">ENTREGADO</option>
+                </select>
+
+                <button type="submit" class="btn-confirmar">Guardar Estado</button>
+            </form>
         </div>
     </div>
 

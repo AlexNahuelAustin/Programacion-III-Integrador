@@ -60,6 +60,8 @@
                         <th>ID</th>
                         <th>Nombre</th>
                         <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody id="tbody-categorias">
@@ -68,6 +70,23 @@
             </table>
         </section>
     </main>
+
+    <!-- Modal: editar categoría (nombre, descripción) -->
+    <div id="modal-categoria" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" id="cerrar-modal-categoria">&times;</span>
+            <h2>Editar Categoría</h2>
+            <form id="form-categoria">
+                <label>Nombre:</label>
+                <input type="text" id="categoria-nombre" placeholder="Ej: Hamburguesas" required>
+
+                <label>Descripción:</label>
+                <textarea id="categoria-descripcion" placeholder="Ej: Hamburguesas artesanales"></textarea>
+
+                <button type="submit" class="btn-confirmar">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer>

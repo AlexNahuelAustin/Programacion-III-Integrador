@@ -1043,6 +1043,91 @@ body {
 }
 
 /*
+=== ACCIONES TABLA ADMIN (editar/eliminar/estado) ===
+*/
+.acciones-tabla {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-tabla-editar,
+.btn-tabla-eliminar,
+.btn-tabla-activar,
+.btn-tabla-estado {
+  padding: 6px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-tabla-editar,
+.btn-tabla-estado {
+  background: var(--color--primario);
+  color: var(--color-blanco);
+}
+
+.btn-tabla-editar:hover,
+.btn-tabla-estado:hover {
+  background: var(--color-focus);
+}
+
+.btn-tabla-eliminar {
+  background: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.btn-tabla-eliminar:hover {
+  background: #dc3545;
+  color: var(--color-blanco);
+}
+
+.btn-tabla-activar {
+  background: transparent;
+  color: #28a745;
+  border: 1px solid #28a745;
+}
+
+.btn-tabla-activar:hover {
+  background: #28a745;
+  color: var(--color-blanco);
+}
+
+/*
+=== FILTRO DE PEDIDOS ===
+*/
+.filtro-pedidos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filtro-pedidos label {
+  font-weight: bold;
+  color: var(--color-texto);
+}
+
+.filtro-pedidos select {
+  padding: 8px 12px;
+  border: 1px solid var(--color-borde);
+  border-radius: 5px;
+  background: var(--color-blanco);
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+}
+
+.filtro-pedidos select:focus {
+  outline: none;
+  border-color: var(--color-focus);
+}
+
+/*
 === ADMIN HOME ===
 */
 .body--admin {

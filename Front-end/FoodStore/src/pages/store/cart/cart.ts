@@ -223,7 +223,7 @@ const guardarPedido = () => {
   const pedido = {
     id: Date.now(),
     fecha: new Date().toLocaleDateString("es-AR"),
-    estado: "Pendiente",
+    estado: "PENDIENTE",
     total: totalConEnvio,
     formaPago: metodoEl.value,
     detalles: carrito.map((p: IProducto & { cantidad: number }) => ({

@@ -20,6 +20,24 @@ const pedidosData = [...pedidosJson, ...pedidosLocal];
 // Proteger ruta: redirige si no está autenticado o no es ADMIN
 checkAuhtUser("/src/pages/auth/login/login.html", "/src/pages/store/home/home.html", "ADMIN");
 
+const ESTADO_OVERRIDES_KEY = "pedidosEstadoOverrides";
+let pedidoEditandoId: number | null = null;
+let filtroActual = "Todos";
+
+// Cambios de estado guardados en localStorage (no se pisa el JSON base)
+const obtenerEstadoOverrides = (): Record<number, string> => {
+  return JSON.parse(localStorage.getItem(ESTADO_OVERRIDES_KEY) || "{}");
+};
+
+const guardarEstadoOverrides = (overrides: Record<number, string>) => {
+  localStorage.setItem(ESTADO_OVERRIDES_KEY, JSON.stringify(overrides));
+};
+
+const obtenerEstadoFinal = (pedido: IPedido): string => {
+  const overrides = obtenerEstadoOverrides();
+  return overrides[pedido.id] ?? pedido.estado;
+};
+
 // Actualiza nombre usuario en header desde localStorage
 const actualizarHeader = () => {
   const userData = localStorage.getItem("userData");
@@ -60,7 +78,7 @@ const abrirModalPedido = (pedido: IPedido) => {
       <p><strong>Fecha:</strong> ${pedido.fecha}</p>
       <p><strong>Teléfono:</strong> ${pedido.usuarioDto.celular}</p>
       <p><strong>Método de pago:</strong> ${pedido.formaPago}</p>
-      <p><strong>Estado:</strong> <span class="modal-pedido-estado">${pedido.estado}</span></p>
+      <p><strong>Estado:</strong> <span class="modal-pedido-estado">${obtenerEstadoFinal(pedido)}</span></p>
     </div>
 
     <div class="modal-pedido-productos">
@@ -83,29 +101,75 @@ const abrirModalPedido = (pedido: IPedido) => {
   modal.style.display = "flex";
 };
 
-// Llena tabla con pedidos (ID, usuario, total, estado, fecha) - click abre modal
+// Llena tabla con pedidos (ID, usuario, total, estado, fecha) - click abre modal, filtrada por estado
 const renderizarTarjetas = () => {
   const tbody = document.getElementById("tbody-pedidos");
   if (!tbody) return;
 
   tbody.innerHTML = "";
 
-  pedidosData.forEach((pedido: IPedido) => {
+  const pedidosFiltrados = pedidosData.filter(
+    (pedido: IPedido) => filtroActual === "Todos" || obtenerEstadoFinal(pedido) === filtroActual
+  );
+
+  pedidosFiltrados.forEach((pedido: IPedido) => {
     const tr = document.createElement("tr");
     tr.style.cursor = "pointer";
     tr.innerHTML = `
       <td>${pedido.id}</td>
       <td>${pedido.usuarioDto.nombre} ${pedido.usuarioDto.apellido}</td>
       <td>$${pedido.total.toLocaleString("es-AR")}</td>
-      <td>${pedido.estado}</td>
+      <td>${obtenerEstadoFinal(pedido)}</td>
       <td>${pedido.fecha}</td>
+      <td><button class="btn-tabla-estado" data-id="${pedido.id}">Cambiar Estado</button></td>
     `;
     tr.addEventListener("click", () => abrirModalPedido(pedido));
     tbody.appendChild(tr);
   });
+
+  tbody.querySelectorAll<HTMLButtonElement>(".btn-tabla-estado").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      abrirModalEstado(Number(btn.dataset.id));
+    });
+  });
 };
 
-// Cierra el modal
+// Abre el modal para cambiar el estado de un pedido
+const abrirModalEstado = (id: number) => {
+  const pedido = pedidosData.find((p: IPedido) => p.id === id);
+  if (!pedido) return;
+
+  pedidoEditandoId = id;
+
+  const modal = document.getElementById("modal-estado") as HTMLDivElement;
+  const estadoSelect = document.getElementById("estado-select") as HTMLSelectElement;
+
+  estadoSelect.value = obtenerEstadoFinal(pedido);
+  modal.style.display = "flex";
+};
+
+const cerrarModalEstado = () => {
+  const modal = document.getElementById("modal-estado") as HTMLDivElement;
+  modal.style.display = "none";
+  pedidoEditandoId = null;
+};
+
+// Guarda el nuevo estado del pedido en localStorage
+const guardarEstado = () => {
+  if (pedidoEditandoId === null) return;
+
+  const estadoSelect = document.getElementById("estado-select") as HTMLSelectElement;
+
+  const overrides = obtenerEstadoOverrides();
+  overrides[pedidoEditandoId] = estadoSelect.value;
+  guardarEstadoOverrides(overrides);
+
+  cerrarModalEstado();
+  renderizarTarjetas();
+};
+
+// Cierra el modal de detalle
 const cerrarModal = () => {
   const modal = document.getElementById("modal-pedido") as HTMLElement;
   modal.style.display = "none";
@@ -117,6 +181,18 @@ document.getElementById("cerrar-modal-pedido")?.addEventListener("click", cerrar
 // Cierra modal si hace click afuera del contenido
 document.getElementById("modal-pedido")?.addEventListener("click", (e) => {
   if (e.target === e.currentTarget) cerrarModal();
+});
+document.getElementById("cerrar-modal-estado")?.addEventListener("click", cerrarModalEstado);
+document.getElementById("modal-estado")?.addEventListener("click", (e) => {
+  if (e.target === e.currentTarget) cerrarModalEstado();
+});
+document.getElementById("form-estado")?.addEventListener("submit", (e) => {
+  e.preventDefault();
+  guardarEstado();
+});
+document.getElementById("filtro-estado")?.addEventListener("change", (e) => {
+  filtroActual = (e.target as HTMLSelectElement).value;
+  renderizarTarjetas();
 });
 
 // Inicializar
