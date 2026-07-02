@@ -7,7 +7,7 @@
 **Comisión:** 6  
 **Trabajo Práctico Integrador:** FoodStore (Frontend y Backend)
 
-**Video presentación:** https://youtu.be/8VshIO0qmSs?si=Zqzw4WgiY8RvOSkM
+**Video presentación:** https://youtu.be/A5Y7XRBFGy8?si=eUa_g6GJbj-8YUTn
 
 **Repositorio:** https://github.com/AlexNahuelAustin/Programacion-III-Integrador
 
